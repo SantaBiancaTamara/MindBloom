@@ -27,11 +27,14 @@ function CustomToolbar(props) {
 
 export default function Calendar() {
   const [selectedDate, setSelecteddate] = React.useState(dayjs());
+  localStorage.setItem("date", selectedDate);
+  console.log(localStorage.getItem("date"))
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
   const handleDataChange = (newValue) => {
     setSelecteddate(newValue);
+    localStorage.setItem("date", newValue.toISOString()); 
     setOpen(true);
   }
 
@@ -45,9 +48,16 @@ export default function Calendar() {
   }
 
   const handleBlankPage = () => {
-    navigate('/blank');
+    if(selectedDate)   
+      {
+      navigate('/blank', { state: { selectedDate } });
+      setOpen(false);
+    } else {
+
+    // Pass the selectedDate via React Router's state
     setOpen(false);
   }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
