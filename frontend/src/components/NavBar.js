@@ -10,7 +10,7 @@ function NavBar({children}){
             <nav>
                 <button onClick={() => navigate('/home')}>New Entry</button>
                 <button onClick={() => navigate('/statistics')}>Statistics</button>
-                <button onClick={() => navigate('/calendar')}>Calendar</button>
+                <button onClick={() => navigate('/newcalendar')}>Calendar</button>
                 <button onClick={() => navigate('/quotes')}>Quotes</button>
             </nav>
             <div className="content">

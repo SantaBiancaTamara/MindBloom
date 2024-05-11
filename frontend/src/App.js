@@ -9,7 +9,7 @@ import MyCalendar from './components/MyCalendar.js'
 import MyFullCalendar from './components/MyFullCalendar.js'
 import EntriesForDay from './components/EntriesForDay.js'
 import BlankPage from './components/BlankPage.js'
-//import ToolbarComponent from './components/Calendar.js'
+import Calendar from './components/Calendar.js'
 //import NavBar from './components/NavBar.js'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
@@ -26,7 +26,7 @@ function App() {
         <Route path = '/entries' element = {<Entries />}></Route>
         <Route path = '/calendar' element={<MyCalendar />} />
         <Route path="/fullcalendar" element={<MyFullCalendar />} />
-        {/* <Route path="/newcalendar" element={<ToolbarComponent />} /> */}
+        <Route path="/newcalendar" element={<Calendar />} /> 
         <Route path="/entries/:date" element={<EntriesForDay />} />
         <Route path="/blank" element={<BlankPage />} />
 

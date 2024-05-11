@@ -1,53 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 
-function EntriesForDay() {
-    const { date } = useParams(); // Get the date from the route parameter
-    const [entries, setEntries] = useState([]);
-    const [error, setError] = useState('');
+const DayEntries = () => {
+  const { date } = useParams(); // This assumes your route is set up like '/entries/:date'
+  const [entries, setEntries] = useState([]);
 
-    useEffect(() => {
-        const fetchEntries = async () => {
-            const token = localStorage.getItem('token'); // Get the token from local storage
-            if (!token) {
-                setError('No token found. Please log in again.');
-                return;
+  useEffect(() => {
+    
+    const fetchEntries = async () => {
+        try {
+          const response = await fetch(`http://localhost:8080/entries/${date}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
+              'Accept': 'application/json'
             }
-            try {
-                console.log(date);
-                const response = await axios.get(`http://localhost:8080/entries/date/${date}`, {
-             
-                    headers: {
-                        Authorization: `Bearer ${token}` // Add the Authorization header
-                    }
-                });
-                setEntries(response.data);
-            } catch (err) {
-                const errorMessage = err.response ? err.response.data.message : 'Failed to fetch entries.';
-                setError(errorMessage);
-            }
-        };
+          });
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          setEntries(data);
+          console.log(data);
+        } catch (error) {
+          console.error('Failed to fetch entries:', error.message);
+        }
+      };
 
-        fetchEntries();
-    }, [date]);
+    fetchEntries();
+  }, [date]);
 
-    return (
-        <div>
-          <h1>Entries for {date}</h1>
-          {error && <p className="text-danger">{error}</p>}
-          {entries.map(entry => (
-            <div key={entry._id}>
-              <p><strong>User:</strong> {entry.userId.name} ({entry.userId.nickname})</p>  // Displays full name and nickname
-              <p><strong>Mood:</strong> {entry.moodId.name}</p>  // Adjusted to use the 'name' field from the Mood model
-              <p><strong>Activities:</strong> {entry.activityIds.map(activity => activity.name).join(', ')}</p>  // Assuming each activity has a 'name'
-              <p><strong>Date:</strong> {new Date(entry.timestamp).toLocaleDateString()}</p>
-              <p><strong>Time:</strong> {new Date(entry.timestamp).toLocaleTimeString()}</p>
-              <p><strong>Complete:</strong> {entry.isComplete ? 'Yes' : 'No'}</p>
-            </div>
-          ))}
+  return (
+    <div>
+      {entries.map(entry => (
+        <div key={entry.timestamp}>
+          <h3>{entry.moodName}</h3>
+          <ul>
+            {entry.activities.map(activity => (
+              <li key={activity.name}>{activity.name} - {activity.description} ({activity.moodImpact})</li>
+            ))}
+          </ul>
+          <p>{entry.isComplete ? 'Completed' : 'Incomplete'}</p>
         </div>
-      );
-}
+      ))}
+    </div>
+  );
+};
 
-export default EntriesForDay;
+export default DayEntries;
