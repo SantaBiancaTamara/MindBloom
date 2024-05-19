@@ -6,40 +6,39 @@ const DayEntries = () => {
   const [entries, setEntries] = useState([]);
 
   useEffect(() => {
-    
     const fetchEntries = async () => {
-        try {
-          const response = await fetch(`http://localhost:8080/entries/${date}`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
-              'Accept': 'application/json'
-            }
-          });
-      
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+      try {
+        const response = await fetch(`http://localhost:8080/entries/${date}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
+            'Accept': 'application/json'
           }
-      
-          const data = await response.json();
-          setEntries(data);
-          console.log(data);
-        } catch (error) {
-          console.error('Failed to fetch entries:', error.message);
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-      };
+
+        const data = await response.json();
+        console.log('Fetched entries:', data); // Debug log
+        setEntries(data);
+      } catch (error) {
+        console.error('Failed to fetch entries:', error.message);
+      }
+    };
 
     fetchEntries();
   }, [date]);
 
   return (
     <div>
-      {entries.map(entry => (
-        <div key={entry.timestamp}>
+      {entries.map((entry, index) => (
+        <div key={index}>
           <h3>{entry.moodName}</h3>
           <ul>
-            {entry.activities.map(activity => (
-              <li key={activity.name}>{activity.name} - {activity.description} ({activity.moodImpact})</li>
+            {entry.activities.map((activity, idx) => (
+              <li key={idx}>{activity.name} - {activity.description} ({activity.moodImpact})</li>
             ))}
           </ul>
           <p>{entry.isComplete ? 'Completed' : 'Incomplete'}</p>

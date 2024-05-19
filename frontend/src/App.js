@@ -12,6 +12,7 @@ import BlankPage from './components/BlankPage.js'
 import Calendar from './components/Calendar.js'
 //import NavBar from './components/NavBar.js'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import Quotes from './components/Quotes.js';
 
 
 function App() {
@@ -29,10 +30,11 @@ function App() {
         <Route path="/newcalendar" element={<Calendar />} /> 
         <Route path="/entries/:date" element={<EntriesForDay />} />
         <Route path="/blank" element={<BlankPage />} />
+        <Route path='/quotes' element={<Quotes />} />
 
         {/* <Route path= '/statistics' element={<Statistics />} />
         <Route path='/calendar' element={<Calendar />} />
-        <Route path='/quotes' element={<Quotes />} /> */}
+         */}
       </Routes>
       </BrowserRouter>
    </div> 

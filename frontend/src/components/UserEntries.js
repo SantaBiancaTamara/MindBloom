@@ -42,7 +42,7 @@ function Entries() {
                                 {expandedEntryId === entry._id && (
                                     <div className="entry-details">
                                         <p><strong>Activities:</strong> {entry.activityIds.join(', ')}</p>
-                                        <p><strong>Journal:</strong> {entry.journal || "No journal entry"}</p>
+                                        <p><strong>Journal:</strong> {entry.journal|| "No journal entry"}</p>
                                     </div>
                                 )}
                             </div>

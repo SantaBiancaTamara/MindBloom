@@ -1,4 +1,3 @@
-// Activities.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -9,26 +8,25 @@ function Activities() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const fetchCategoriesWithActivities = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Please log in to continue.');
+      return;
+    }
+
+    try {
+      const response = await axios.get('http://localhost:8080/getAllActivitiesForUser', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log("Fetched Categories with Activities:", response.data); // Debugging log
+      setCategories(response.data);
+    } catch (error) {
+      setError(error.response?.data.message || 'Failed to fetch activities.');
+    }
+  };
+
   useEffect(() => {
-    // Fetch categories with their associated activities
-    const fetchCategoriesWithActivities = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('Please log in to continue.');
-        return;
-      }
-
-      try {
-        // Assume your backend endpoint for fetching categories with activities is '/getCategorywithActivities'
-        const response = await axios.get('http://localhost:8080/getCategorywithActivities', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setCategories(response.data);
-      } catch (error) {
-        setError(error.response?.data.message || 'Failed to fetch activities.');
-      }
-    };
-
     fetchCategoriesWithActivities();
   }, []);
 
@@ -46,29 +44,44 @@ function Activities() {
 
   const completeEntry = async () => {
     const entryId = localStorage.getItem('entryId');
-    console.log(entryId);
     const token = localStorage.getItem('token');
-    console.log(token);
     if (!entryId || !token) {
       setError('No entry found to update.');
       return;
     }
 
     try {
-       await axios.patch(`http://localhost:8080/insertCompleteEntry/${entryId}`, {
+      await axios.patch(`http://localhost:8080/insertCompleteEntry/${entryId}`, {
         activityIds: Array.from(selectedActivities)
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Clear the entryId from localStorage and navigate to the confirmation or summary page
-      //console.log(response.data);
-    //  localStorage.removeItem('entryId');
-    navigate('/entries')
+      navigate('/entries');
     } catch (error) {
       setError(error.response?.data.message || 'Failed to complete entry.');
     }
   };
+
+  const handleAddActivity = async (categoryId) => {
+    const newActivityName = prompt("Enter the name for the new activity:");
+    if (!newActivityName) return;
+
+    const token = localStorage.getItem('token');
+    try {
+      await axios.post('http://localhost:8080/addUserActivity', {
+        category: categoryId,  // Ensure this is 'category' not 'categoryId'
+        name: newActivityName
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Refresh categories to show the new activity
+      fetchCategoriesWithActivities();
+    } catch (error) {
+      setError("Failed to add activity.");
+    }
+  };
+
   return (
     <div className="activity-tracker">
       <h2>What did you do?</h2>
@@ -77,11 +90,12 @@ function Activities() {
         {categories.map((category) => (
           <div key={category._id} className="category">
             <h3>{category.name}</h3>
+            <button onClick={() => handleAddActivity(category._id)}>+ Add Activity</button>
             <div className="activities">
               {category.activities.map((activity) => (
                 <div key={activity._id} className="activity">
                   <input
-                    type="checkbox" // Use checkbox for multiple selections
+                    type="checkbox"
                     id={`activity-${activity._id}`}
                     name="activity"
                     value={activity._id}
@@ -89,7 +103,6 @@ function Activities() {
                     onChange={() => handleActivitySelection(activity._id)}
                   />
                   <label htmlFor={`activity-${activity._id}`}>
-                    <span role="img" aria-label={activity.name}>{activity.emoji}</span>
                     {activity.name}
                   </label>
                 </div>

@@ -1,12 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 
 const BlankPage = () => {
-  const location = useLocation();
   const [content, setContent] = useState('');
-  const token = localStorage.getItem('token'); 
+  const token = localStorage.getItem('token');
   const selectedDate = localStorage.getItem('date');
+
+  // Effect to load existing content for the selected date
+  useEffect(() => {
+    const fetchContent = async () => {
+      if (!selectedDate) {
+        console.error('No date selected');
+        setContent('');
+        return;
+      }
+
+      const timestamp = new Date(selectedDate).toISOString();
+      try {
+        const response = await axios.get(`http://localhost:8080/getBlankPage/${timestamp}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (response.data) {
+          setContent(response.data.content);
+        } else {
+          setContent('');
+        }
+      } catch (error) {
+        console.error('Failed to fetch content:', error);
+        setContent('');
+      }
+    };
+
+    fetchContent();
+  }, [selectedDate, token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,19 +42,16 @@ const BlankPage = () => {
       return;
     }
 
-    const timestamp = new Date(selectedDate).toISOString(); 
+    const timestamp = new Date(selectedDate).toISOString();
 
     try {
-        console.log('Content to be sent:', content);
-
-      const response = await axios.post('http://localhost:8080/insertNote', {
+      const response = await axios.post('http://localhost:8080/insertOrUpdateNote', {
         content,
-        timestamp, 
+        timestamp,
       }, {
-        headers: { Authorization: `Bearer ${token}` }  
+        headers: { Authorization: `Bearer ${token}` }
       });
-      console.log(response.data);
-      setContent(''); 
+      console.log('Content saved:', response.data);
       alert('Note saved successfully!');
     } catch (error) {
       console.error('Failed to save note:', error);

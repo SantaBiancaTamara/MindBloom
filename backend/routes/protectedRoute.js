@@ -2,9 +2,10 @@
 import express from 'express';
 const router = express.Router();
 import verifyToken from '../middleware/authMiddleware.js';
-import { getAllCategories, getAllActivities, getMoods, getCategoryWithActivities, getOneCategoryWithActivities } from '../handlers/categoryActivityHandler.js'
+import { getAllCategories, getAllActivities, getMoods, getCategoryWithActivities, getOneCategoryWithActivities, addUserActivity, getAllUserActivity, getAllActivitiesForUser } from '../handlers/categoryActivityHandler.js'
 import { completeUserEntry, getAllUserEntries, insertUserEntry, getUserEntriesByDay, getAllEntries } from '../handlers/entryHandler.js';
-import { insertNote,getAllBlankPages } from '../handlers/blankPageHandler.js';
+import { insertOrUpdateNote,getAllBlankPages, getBlankPage } from '../handlers/blankPageHandler.js';
+import {fetchQuotes} from '../handlers/quotes.js'
 
 
 router.get('/getCategories', verifyToken, getAllCategories);
@@ -17,7 +18,12 @@ router.patch('/insertCompleteEntry/:entryId', verifyToken, completeUserEntry);
 router.get('/userEntries', verifyToken, getAllUserEntries);
 router.get('/entries/:date', verifyToken, getUserEntriesByDay);
 router.get('/getAllEntries', getAllEntries);
-router.post('/insertNote', verifyToken, insertNote)
+router.post('/insertOrUpdateNote', verifyToken, insertOrUpdateNote)
+router.get('/getBlankPage/:timestamp', verifyToken, getBlankPage);
 router.get("/getAllBlankPages", getAllBlankPages)
+router.get("/fetchQuotes", verifyToken, fetchQuotes)
+router.post("/addUserActivity", verifyToken, addUserActivity);
+router.get("/getAllUserActivity", verifyToken, getAllUserActivity)
+router.get("/getAllActivitiesForUser", verifyToken, getAllActivitiesForUser);
 
 export default router;

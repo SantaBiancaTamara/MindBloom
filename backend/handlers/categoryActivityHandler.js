@@ -1,6 +1,7 @@
 import Category from "../models/Category.js"
 import Activity from "../models/Activity.js";
 import Mood from "../models/Mood.js";
+import UserActivity from "../models/UserActivity.js";
 
 export const getAllCategories = async(req,res) => {
   try {
@@ -71,3 +72,86 @@ export const getCategoryWithActivities = async(req,res) => {
   }
 }
 
+// export const addActivity = async (req, res) => {
+//   const { categoryId, name } = req.body;
+//   try {
+//     const category = await Category.findById(categoryId);
+//     if (!category) {
+//       return res.status(404).json({ message: "Category not found" });
+//     }
+//     const newActivity = new Activity({
+//       name,
+//       category: categoryId
+//     });
+//     await newActivity.save();
+//     // Optionally, push this activity into the category's activity list if needed
+//     category.activities.push(newActivity);
+//     await category.save();
+//     res.status(201).json(newActivity);
+//   } catch (error) {
+//     console.log(error);  // This will log to your server's console
+//     res.status(500).json({ message: "Failed to add activity", error: error.message });
+//   }
+// };
+
+
+export const addUserActivity = async(req,res) => {
+
+  const {name, category, description, moodImpact, additionalAttributes} = req.body;
+  const userId = req.userId
+
+  try{
+    const newUserActivity = new UserActivity({
+      user: userId,
+      name,
+      category,
+      description,
+      moodImpact,
+      additionalAttributes
+    });
+
+    const savedActivity = await newUserActivity.save();
+    res.status(201).json(savedActivity);
+  }catch (err){
+    res.status(400).json({error: err.message});
+  }
+
+
+}
+
+export const getAllUserActivity = async(req,res) => {
+
+  const userId = req.userId;
+
+    try {
+        const userActivities = await UserActivity.find({ user: userId });
+        res.status(200).json(userActivities);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
+export const getAllActivitiesForUser = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+      // Fetch predefined activities
+      const categories = await Category.find({}).populate('activities');
+
+      // Fetch user-specific activities
+      const userActivities = await UserActivity.find({ user: userId });
+
+      // Combine activities
+      const categoryWithAllActivities = categories.map(category => {
+          const categoryObject = category.toObject();
+          categoryObject.activities = categoryObject.activities.concat(
+              userActivities.filter(activity => activity.category.toString() === category._id.toString())
+          );
+          return categoryObject;
+      });
+
+      res.status(200).json(categoryWithAllActivities);
+  } catch (err) {
+      res.status(500).json({ message: "Error fetching activities", error: err.message });
+  }
+};

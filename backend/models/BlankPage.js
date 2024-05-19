@@ -18,7 +18,7 @@ const blankPageSchema = new mongoose.Schema({
   }
 });
 
-blankPageSchema.index({ userId: 1, date: 1 }, { unique: true });
+blankPageSchema.index({ userId: 1, timestamp: 1 }, { unique: true });
 
 const BlankPage = mongoose.model('BlankPage', blankPageSchema);
 
