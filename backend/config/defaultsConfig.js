@@ -15,8 +15,8 @@ const defaultsConfig = {
         { name: 'Social'},  
         { name: 'Better Me'},   
         { name: 'Productivity'},  
-        { name: 'School' }, // Added a new category
-        { name: 'Chores' }, // Another new category
+        { name: 'School' }, 
+        { name: 'Chores' }, 
         { name: 'Romance'},  
         { name: 'Beauty'},  
         { name: 'Places'},

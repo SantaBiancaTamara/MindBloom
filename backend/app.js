@@ -67,10 +67,10 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .then(async () => {
     console.log('Connected to MongoDB');
     // Clear the categories and activities collections
-    await Category.deleteMany({});
-    console.log('All categories have been deleted.');
-    await Activity.deleteMany({});
-    console.log('All activities have been deleted.');
+   // await Category.deleteMany({});
+   // console.log('All categories have been deleted.');
+   // await Activity.deleteMany({});
+   // console.log('All activities have been deleted.');
     await initializeDefaults(); // Initialize defaults after successful connection
     const port = process.env.PORT || 8080;
     app.listen(port, () => console.log(`Server is listening on port ${port}...`));

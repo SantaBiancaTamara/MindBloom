@@ -2,7 +2,7 @@
 import express from 'express';
 const router = express.Router();
 import verifyToken from '../middleware/authMiddleware.js';
-import { getAllCategories, getAllActivities, getMoods, getCategoryWithActivities, getOneCategoryWithActivities, addUserActivity, getAllUserActivity, getAllActivitiesForUser } from '../handlers/categoryActivityHandler.js'
+import { getAllCategories, getAllActivities, getMoods, getCategoryWithActivities, getOneCategoryWithActivities, addUserActivity, getAllUserActivity, getAllActivitiesForUser, deleteUserActivity } from '../handlers/categoryActivityHandler.js'
 import { completeUserEntry, getAllUserEntries, insertUserEntry, getUserEntriesByDay, getAllEntries } from '../handlers/entryHandler.js';
 import { insertOrUpdateNote,getAllBlankPages, getBlankPage } from '../handlers/blankPageHandler.js';
 import {fetchQuotes} from '../handlers/quotes.js'
@@ -25,5 +25,6 @@ router.get("/fetchQuotes", verifyToken, fetchQuotes)
 router.post("/addUserActivity", verifyToken, addUserActivity);
 router.get("/getAllUserActivity", verifyToken, getAllUserActivity)
 router.get("/getAllActivitiesForUser", verifyToken, getAllActivitiesForUser);
+router.delete('/deleteUserActivity/:id', verifyToken, deleteUserActivity);
 
 export default router;

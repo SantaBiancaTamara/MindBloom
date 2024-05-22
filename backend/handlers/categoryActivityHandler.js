@@ -95,29 +95,55 @@ export const getCategoryWithActivities = async(req,res) => {
 // };
 
 
-export const addUserActivity = async(req,res) => {
+// export const addUserActivity = async(req,res) => {
 
-  const {name, category, description, moodImpact, additionalAttributes} = req.body;
-  const userId = req.userId
+//   const {name, category, description, moodImpact, additionalAttributes} = req.body;
+//   const userId = req.userId
 
-  try{
+//   try{
+//     const newUserActivity = new UserActivity({
+//       user: userId,
+//       name,
+//       category,
+//       description,
+//       moodImpact,
+//       additionalAttributes
+//     });
+
+//     const savedActivity = await newUserActivity.save();
+//     res.status(201).json(savedActivity);
+//   }catch (err){
+//     res.status(400).json({error: err.message});
+//   }
+
+
+// }
+
+export const addUserActivity = async (req, res) => {
+  const { name, categoryName, description, moodImpact, additionalAttributes } = req.body;
+  const userId = req.userId;
+
+  try {
+    const category = await Category.findOne({ name: categoryName });
+    if (!category) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
     const newUserActivity = new UserActivity({
       user: userId,
       name,
-      category,
+      category: category._id,
       description,
       moodImpact,
-      additionalAttributes
+      additionalAttributes,
     });
 
     const savedActivity = await newUserActivity.save();
     res.status(201).json(savedActivity);
-  }catch (err){
-    res.status(400).json({error: err.message});
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
-
-
-}
+};
 
 export const getAllUserActivity = async(req,res) => {
 
@@ -153,5 +179,20 @@ export const getAllActivitiesForUser = async (req, res) => {
       res.status(200).json(categoryWithAllActivities);
   } catch (err) {
       res.status(500).json({ message: "Error fetching activities", error: err.message });
+  }
+};
+
+export const deleteUserActivity = async (req, res) => {
+  const activityId = req.params.id;
+  const userId = req.userId;
+
+  try {
+    const activity = await UserActivity.findOneAndDelete({ _id: activityId, user: userId });
+    if (!activity) {
+      return res.status(404).json({ message: 'Activity not found or you do not have permission to delete this activity.' });
+    }
+    res.status(200).json({ message: 'Activity deleted successfully.' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };

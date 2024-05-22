@@ -2,27 +2,38 @@ import Entry from '../models/Entry.js'
 import mongoose from 'mongoose';
 import Mood from "../models/Mood.js"
 import Activity from "../models/Activity.js"
+import UserActivity from '../models/UserActivity.js';
 
 export const insertUserEntry = async (req, res) => {
-    try {
-      const{ moodId } = req.body;
+  try {
+      console.log('Request body:', req.body);
+      const { moodId } = req.body;
       const userId = req.userId;
-  
-      //incomplete entry
-      const newEntry = new Entry({
-        userId, 
-        moodId,
-        activityIds: [],
-        isComplete:false
-      })
-      const savedEntry = await newEntry.save();
-     // console.log(savedEntry);
 
+      if (!mongoose.Types.ObjectId.isValid(moodId)) {
+          return res.status(400).json({ error: 'Invalid mood ID' });
+      }
+
+      const mood = await Mood.findById(moodId);
+      if (!mood) {
+          return res.status(404).json({ error: 'Mood not found' });
+      }
+
+      const newEntry = new Entry({
+          userId,
+          moodId,
+          activityIds: [],
+          isComplete: false
+      });
+
+      const savedEntry = await newEntry.save();
       res.status(201).json(savedEntry);
-      } catch (error) {
-        res.status(400).json({ error: 'Error creating entry' });
-    }
+  } catch (error) {
+      console.error('Error creating entry:', error);
+      res.status(400).json({ error: 'Error creating entry' });
   }
+};
+
 
   export const completeUserEntry = async (req, res) => {
     try {
@@ -85,32 +96,50 @@ export const getUserEntriesByDay = async (req, res) => {
     const { date } = req.params;
     const userId = req.userId; // Assuming userId is set by your authentication middleware from the token
 
-    const startDate = new Date(date);
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 1); // Make sure to cover the whole day
-
-    console.log(startDate, endDate);
-
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized: no user ID provided' });
     }
 
-   // console.log("Entries before populate: ", entries);  // Check raw entries data
+    const startDate = new Date(date);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 1);
 
     const populatedEntries = await Entry.find({
-      userId: userId,
-      timestamp: { $gte: startDate, $lt: endDate }
-    }).populate('moodId').populate('activityIds');
-    
-    console.log("Populated Entries: ", populatedEntries);  // Check populated data
+      userId: new mongoose.Types.ObjectId(userId),
+      timestamp: {
+        $gte: startDate.toISOString(),
+        $lt: endDate.toISOString()
+      }
+    }).populate('moodId')
+      .populate({
+        path: 'activityIds',
+        model: Activity,
+        populate: { path: 'category' } // populate category if needed
+      });
+
+    // Fetch user-defined activities separately
+    const userActivities = await UserActivity.find({ user: userId });
 
     const entriesWithDetails = populatedEntries.map(entry => ({
       moodName: entry.moodId.name,
-      activities: entry.activityIds.map(activity => ({
-        name: activity.name,
-        description: activity.description,
-        moodImpact: activity.moodImpact
-      })),
+      activities: entry.activityIds.map(activity => {
+        const userActivity = userActivities.find(ua => ua._id.equals(activity._id));
+        if (userActivity) {
+          return {
+            name: userActivity.name,
+            description: userActivity.description,
+            moodImpact: userActivity.moodImpact,
+            additionalAttributes: userActivity.additionalAttributes,
+          };
+        } else {
+          return {
+            name: activity.name,
+            description: activity.description,
+            moodImpact: activity.moodImpact,
+            additionalAttributes: activity.additionalAttributes,
+          };
+        }
+      }),
       timestamp: entry.timestamp,
       isComplete: entry.isComplete
     }));

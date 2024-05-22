@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import NavBar from './NavBar'; // Adjust the import according to your project structure
 
 const DayEntries = () => {
   const { date } = useParams(); // This assumes your route is set up like '/entries/:date'
   const [entries, setEntries] = useState([]);
+  const [error, setError] = useState(null); // Define error state
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -25,6 +27,7 @@ const DayEntries = () => {
         setEntries(data);
       } catch (error) {
         console.error('Failed to fetch entries:', error.message);
+        setError(error.message); // Set error state
       }
     };
 
@@ -32,19 +35,28 @@ const DayEntries = () => {
   }, [date]);
 
   return (
-    <div>
-      {entries.map((entry, index) => (
-        <div key={index}>
-          <h3>{entry.moodName}</h3>
-          <ul>
-            {entry.activities.map((activity, idx) => (
-              <li key={idx}>{activity.name} - {activity.description} ({activity.moodImpact})</li>
-            ))}
-          </ul>
-          <p>{entry.isComplete ? 'Completed' : 'Incomplete'}</p>
-        </div>
-      ))}
-    </div>
+    <NavBar>
+      <div className="entry-tracker">
+        <h2>Your Entries</h2>
+        {error && <p className="text-danger">{error}</p>} {/* Display error if exists */}
+        <ul className="entries-list">
+          {entries.map((entry, index) => (
+            <li key={index} className="entry-item">
+              <div className="entry-summary">
+                <p><strong>Date:</strong> {new Date(entry.timestamp).toLocaleString()}</p>
+                <p><strong>Mood:</strong> {entry.moodName}</p>
+                <ul>
+                  {entry.activities.map((activity, idx) => (
+                    <li key={idx}>{activity.name} - {activity.description} ({activity.moodImpact})</li>
+                  ))}
+                </ul>
+                <p><strong>Status:</strong> {entry.isComplete ? 'Completed' : 'Incomplete'}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </NavBar>
   );
 };
 

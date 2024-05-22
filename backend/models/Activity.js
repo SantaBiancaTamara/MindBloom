@@ -6,8 +6,8 @@ const activitySchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId, // Update this
-        ref: 'Category', // Ensure this references the Category model
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Category', 
         required: true
     },
     description: {
@@ -30,7 +30,5 @@ const activitySchema = new mongoose.Schema({
     }
 
 })
-
 const Activity = mongoose.model('Activity', activitySchema);
-
 export default Activity;

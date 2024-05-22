@@ -63,20 +63,19 @@ function Activities() {
     }
   };
 
-  const handleAddActivity = async (categoryId) => {
+  const handleAddActivity = async (categoryName) => {
     const newActivityName = prompt("Enter the name for the new activity:");
     if (!newActivityName) return;
-
+  
     const token = localStorage.getItem('token');
     try {
       await axios.post('http://localhost:8080/addUserActivity', {
-        category: categoryId,  // Ensure this is 'category' not 'categoryId'
-        name: newActivityName
+        categoryName,  // Send category name instead of ID
+        name: newActivityName,
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Refresh categories to show the new activity
-      fetchCategoriesWithActivities();
+      fetchCategoriesWithActivities(); // Refresh categories to show the new activity
     } catch (error) {
       setError("Failed to add activity.");
     }

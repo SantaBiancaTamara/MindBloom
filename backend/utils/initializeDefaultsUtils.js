@@ -36,7 +36,7 @@ async function initializeDefaults() {
         { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
-    console.log(activity.name);
+   // console.log(activity.name);
 
 }
 
