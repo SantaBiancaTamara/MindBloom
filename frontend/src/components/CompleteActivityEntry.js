@@ -64,14 +64,26 @@ function Activities() {
   };
 
   const handleAddActivity = async (categoryName) => {
-    const newActivityName = prompt("Enter the name for the new activity:");
-    if (!newActivityName) return;
+    const newActivity = {
+      name: prompt("Enter the name for the new activity:"),
+      description: prompt("Enter the description for the new activity:"),
+      moodImpact: prompt("Enter the mood impact (positive, neutral, negative):"),
+      duration: prompt("Enter the duration:"),
+      frequency: prompt("Enter the frequency:")
+    };
+    if (!newActivity.name || !newActivity.moodImpact) return;
   
     const token = localStorage.getItem('token');
     try {
       await axios.post('http://localhost:8080/addUserActivity', {
-        categoryName,  // Send category name instead of ID
-        name: newActivityName,
+        categoryName,
+        name: newActivity.name,
+        description: newActivity.description,
+        moodImpact: newActivity.moodImpact,
+        additionalAttributes: {
+          duration: newActivity.duration,
+          frequency: newActivity.frequency
+        }
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -89,7 +101,7 @@ function Activities() {
         {categories.map((category) => (
           <div key={category._id} className="category">
             <h3>{category.name}</h3>
-            <button onClick={() => handleAddActivity(category._id)}>+ Add Activity</button>
+            <button onClick={() => handleAddActivity(category.name)}>+ Add Activity</button>
             <div className="activities">
               {category.activities.map((activity) => (
                 <div key={activity._id} className="activity">

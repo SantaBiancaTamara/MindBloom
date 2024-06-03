@@ -11,17 +11,10 @@ const entrySchema = new mongoose.Schema({
     ref: 'Mood',
     required: true
   },
-  activityIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      refPath: 'onModel'
-    }
-  ],
-  onModel: {
-    type: String,
-    required: true,
-    enum: ['Activity', 'UserActivity']
-  },
+  activityIds: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Activity'
+  }],
   timestamp: {
     type: Date,
     default: Date.now,

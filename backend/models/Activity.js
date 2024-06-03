@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const activitySchema = new mongoose.Schema({
     name: {
@@ -6,13 +6,13 @@ const activitySchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Category', 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
         required: true
     },
     description: {
-       type: String, 
-       required: false
+        type: String,
+        required: false
     },
     moodImpact: {
         type: String,
@@ -20,15 +20,14 @@ const activitySchema = new mongoose.Schema({
         required: false
     },
     additionalAttributes: {
-        duration: {type:String, default:'', required: false},
-        frequency: {type:String, default:'', required: false}
+        duration: { type: String, default: '', required: false },
+        frequency: { type: String, default: '', required: false }
     },
-    isDefault: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
+    userId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]
+});
 
-})
 const Activity = mongoose.model('Activity', activitySchema);
 export default Activity;

@@ -6,6 +6,7 @@ import { getAllCategories, getAllActivities, getMoods, getCategoryWithActivities
 import { completeUserEntry, getAllUserEntries, insertUserEntry, getUserEntriesByDay, getAllEntries } from '../handlers/entryHandler.js';
 import { insertOrUpdateNote,getAllBlankPages, getBlankPage } from '../handlers/blankPageHandler.js';
 import {fetchQuotes} from '../handlers/quotes.js'
+import {text_classif} from "../handlers/text_classif_handler.js"
 
 
 router.get('/getCategories', verifyToken, getAllCategories);
@@ -26,5 +27,6 @@ router.post("/addUserActivity", verifyToken, addUserActivity);
 router.get("/getAllUserActivity", verifyToken, getAllUserActivity)
 router.get("/getAllActivitiesForUser", verifyToken, getAllActivitiesForUser);
 router.delete('/deleteUserActivity/:id', verifyToken, deleteUserActivity);
+router.post("/text_classif", verifyToken, text_classif);
 
 export default router;

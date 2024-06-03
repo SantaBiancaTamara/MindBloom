@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import NavBar from './NavBar'; // Adjust the import according to your project structure
 
 const DayEntries = () => {
-  const { date } = useParams(); // This assumes your route is set up like '/entries/:date'
+  const { date } = useParams(); 
   const [entries, setEntries] = useState([]);
-  const [error, setError] = useState(null); // Define error state
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -13,7 +13,7 @@ const DayEntries = () => {
         const response = await fetch(`http://localhost:8080/entries/${date}`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
+            'Authorization': `Bearer ${localStorage.getItem('token')}`, 
             'Accept': 'application/json'
           }
         });
@@ -23,11 +23,11 @@ const DayEntries = () => {
         }
 
         const data = await response.json();
-        console.log('Fetched entries:', data); // Debug log
+        console.log('Fetched entries:', data); 
         setEntries(data);
       } catch (error) {
         console.error('Failed to fetch entries:', error.message);
-        setError(error.message); // Set error state
+        setError(error.message); 
       }
     };
 
@@ -50,7 +50,7 @@ const DayEntries = () => {
                     <li key={idx}>{activity.name} - {activity.description} ({activity.moodImpact})</li>
                   ))}
                 </ul>
-                <p><strong>Status:</strong> {entry.isComplete ? 'Completed' : 'Incomplete'}</p>
+                {/* <p><strong>Status:</strong> {entry.isComplete ? 'Completed' : 'Incomplete'}</p> */}
               </div>
             </li>
           ))}

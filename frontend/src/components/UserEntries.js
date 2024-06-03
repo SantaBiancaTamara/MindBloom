@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NavBar from './NavBar';  // Ensure you import NavBar correctly
+import NavBar from './NavBar';  
 
 function Entries() {
     const [entries, setEntries] = useState([]);
