@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import Mood from "../models/Mood.js"
 import Activity from "../models/Activity.js"
 import UserActivity from '../models/UserActivity.js';
+import Note from '../models/Note.js'
+import Journal from '../models/Journal.js'
 
 export const insertUserEntry = async (req, res) => {
   try {
@@ -61,23 +63,68 @@ export const insertUserEntry = async (req, res) => {
 };
 
 
-
-export const getAllUserEntries= async (req,res) => {
+export const getAllUserEntries = async (req, res) => {
   try {
     const userId = req.userId;
 
-    if(!userId) {
-      return res.status(401).json({error: 'Unauthorized: no user id provided'})
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized: no user id provided' });
     }
 
-    const allUserEntries = await Entry.find({userId: userId})
-    res.json(allUserEntries)
+    const { month, page = 1, limit = 15 } = req.query;
+    const monthNumber = parseInt(month, 10);
+
+    if (isNaN(monthNumber) || monthNumber < 1 || monthNumber > 12) {
+      return res.status(400).json({ error: 'Invalid month parameter' });
+    }
+
+    const startOfMonth = new Date(new Date().getFullYear(), monthNumber - 1, 1);
+    const endOfMonth = new Date(new Date().getFullYear(), monthNumber, 0);
+    const skip = (page - 1) * limit;
+
+    // Fetch entries
+    const allUserEntries = await Entry.find({
+      userId: userId,
+      timestamp: { $gte: startOfMonth, $lt: endOfMonth }
+    })
+      .populate('moodId')
+      .populate('activityIds')
+      .skip(skip)
+      .limit(parseInt(limit, 10))
+      .sort({ timestamp: 1 });
+
+    const totalEntries = await Entry.countDocuments({
+      userId: userId,
+      timestamp: { $gte: startOfMonth, $lt: endOfMonth }
+    });
+
+    // Fetch notes and journals
+    const allUserNotes = await Note.find({
+      userId: userId,
+      timestamp: { $gte: startOfMonth, $lt: endOfMonth }
+    });
+
+    const allUserJournals = await Journal.find({
+      userId: userId,
+      timestamp: { $gte: startOfMonth, $lt: endOfMonth }
+    });
+
+    const entriesWithJournals = allUserEntries.map(entry => {
+      const entryDate = new Date(entry.timestamp).toDateString();
+      const journalsForEntry = allUserJournals.filter(journal => new Date(journal.timestamp).toDateString() === entryDate);
+      return { ...entry._doc, journals: journalsForEntry };
+    });
+
+    res.json({
+      entries: entriesWithJournals,
+      notes: allUserNotes,
+      total: totalEntries
+    });
   } catch (error) {
-   console.error('Failed to fetch entries: ',error);
-   res.status(500).json({error: 'Internal server error'}); 
+    console.error('Failed to fetch entries: ', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
-
 
 //for verifications
 export const getAllEntries = async(req, res) => {

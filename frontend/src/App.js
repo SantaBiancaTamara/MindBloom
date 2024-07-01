@@ -1,44 +1,40 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import Register from './components/Register'
-import Login from './components/Login'
-import Home from './components/IncompleteMoodEntry'
-import Activities from './components/CompleteActivityEntry.js'
-import Entries from './components/UserEntries.js'
-import MyCalendar from './components/MyCalendar.js'
-import MyFullCalendar from './components/MyFullCalendar.js'
-import EntriesForDay from './components/EntriesForDay.js'
-import BlankPage from './components/BlankPage.js'
-import Calendar from './components/Calendar.js'
-//import NavBar from './components/NavBar.js'
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Quotes from './components/Quotes.js';
-
+import Register from './components/Register';
+import Login from './components/Login';
+import Home from './components/IncompleteMoodEntry';
+import Activities from './components/CompleteActivityEntry';
+import Entries from './components/UserEntries';
+import EntriesForDay from './components/EntriesForDay';
+import Journal from './components/Journal';
+import Quotes from './components/Quotes';
+import Note from './components/Note';
+import JournalPage from './components/JournalPage';
+import FullCalendarPage from './components/FullCalendarPage'; // Ensure the path is correct
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Statistics from './components/Statistics';
 
 function App() {
   return (
-   <div>
+    <div>
       <BrowserRouter>
-      <Routes>
-        <Route path ='/register' element = {<Register />}></Route>
-        <Route path ='/login' element = {<Login />}></Route>
-        <Route path = '/home' element = {<Home />}></Route>
-        <Route path = '/activities' element = {<Activities />}></Route>
-        <Route path = '/entries' element = {<Entries />}></Route>
-        <Route path = '/calendar' element={<MyCalendar />} />
-        <Route path="/fullcalendar" element={<MyFullCalendar />} />
-        <Route path="/newcalendar" element={<Calendar />} /> 
-        <Route path="/entries/:date" element={<EntriesForDay />} />
-        <Route path="/blank" element={<BlankPage />} />
-        <Route path='/quotes' element={<Quotes />} />
-
-        {/* <Route path= '/statistics' element={<Statistics />} />
-        <Route path='/calendar' element={<Calendar />} />
-         */}
-      </Routes>
+        <Routes>
+          <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/newentry' element={<Home />} />
+          <Route path='/activities' element={<Activities />} />
+          <Route path='/entries' element={<Entries />} />
+          <Route path='/calendar' element={<FullCalendarPage />} />
+          <Route path='/entries/:date' element={<EntriesForDay />} />
+          <Route path='/journal' element={<Journal />} />
+          <Route path='/note' element={<Note />} />
+          <Route path='/quotes' element={<Quotes />} />
+          <Route path='/journal/:id' element={<JournalPage />} />
+          <Route path='/statistics' element={<Statistics />} />
+        </Routes>
       </BrowserRouter>
-   </div> 
-  )
+    </div>
+  );
 }
 
 export default App;

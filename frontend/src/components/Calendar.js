@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 function CustomToolbar(props) {
   return (
     <Box
-      // Pass the className to the root element to get correct layout
       className={props.className}
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
     >
@@ -27,10 +26,12 @@ function CustomToolbar(props) {
 
 export default function Calendar() {
   const [selectedDate, setSelecteddate] = React.useState(dayjs());
-  localStorage.setItem("date", selectedDate);
-  console.log(localStorage.getItem("date"))
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    console.log('Calendar component mounted');
+  }, []);
 
   const handleDataChange = (newValue) => {
     setSelecteddate(newValue);
@@ -47,26 +48,24 @@ export default function Calendar() {
     setOpen(false);
   }
 
-  const handleBlankPage = () => {
-    if(selectedDate)   
-      {
-      navigate('/blank', { state: { selectedDate } });
-      setOpen(false);
-    } else {
-
-    // Pass the selectedDate via React Router's state
+  const handleJournal = () => {
+    navigate('/journal', { state: { selectedDate } });
     setOpen(false);
   }
-  };
+
+  const handleNote = () => {
+    navigate('/note', { state: { selectedDate } });
+    setOpen(false);
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
-      displayStaticWrapperAs="desktop"
-      openTo="day"
-      value={selectedDate}
-      onChange={handleDataChange}
-      defaultValue={dayjs()}
+        displayStaticWrapperAs="desktop"
+        openTo="day"
+        value={selectedDate}
+        onChange={handleDataChange}
+        defaultValue={dayjs()}
         slots={{
           toolbar: CustomToolbar,
         }}
@@ -75,8 +74,21 @@ export default function Calendar() {
             toolbarFormat: 'YYYY',
             toolbarPlaceholder: '??',
           },
-          actionBar: {
-            actions: ['clear'],
+        }}
+        sx={{
+          '& .MuiPickersDay-root': {
+            color: 'black', // default text color for days
+          },
+          '& .Mui-selected': {
+            backgroundColor: 'blue', // selected day background color
+          },
+          '& .MuiPickersDay-today': {
+            borderColor: 'red', // border color for today's date
+          },
+          '& .MuiPickersDay-root:not(.Mui-selected)': {
+            '&.MuiPickersDay-dayOutsideMonth': {
+              color: 'gray', // color for days outside the current month
+            },
           },
         }}
       />
@@ -84,7 +96,8 @@ export default function Calendar() {
         <DialogTitle>Select an option</DialogTitle>
         <DialogActions>
           <Button onClick={handleSeeDayEntries}>See Day Entries</Button>
-          <Button onClick={handleBlankPage}>BlankPage</Button>
+          <Button onClick={handleJournal}>Journal</Button>
+          <Button onClick={handleNote}>Note</Button>
         </DialogActions>
       </Dialog>
     </LocalizationProvider>

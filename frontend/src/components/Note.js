@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const BlankPage = () => {
+const Note = () => {
   const [content, setContent] = useState('');
   const token = localStorage.getItem('token');
   const selectedDate = localStorage.getItem('date');
@@ -17,7 +17,7 @@ const BlankPage = () => {
 
       const timestamp = new Date(selectedDate).toISOString();
       try {
-        const response = await axios.get(`http://localhost:8080/getBlankPage/${timestamp}`, {
+        const response = await axios.get(`http://localhost:8080/getNote/${timestamp}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -61,7 +61,7 @@ const BlankPage = () => {
 
   return (
     <div>
-      <h1>My Blank Page</h1>
+      <h1>My Note</h1>
       <form onSubmit={handleSubmit}>
         <textarea
           value={content}
@@ -77,4 +77,4 @@ const BlankPage = () => {
   );
 };
 
-export default BlankPage;
+export default Note;
