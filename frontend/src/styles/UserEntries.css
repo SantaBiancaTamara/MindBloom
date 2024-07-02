@@ -1,0 +1,99 @@
+/* src/styles/UserEntries.css */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  overflow: auto; /* Prevent scrolling */
+
+  height: 100%; /* Ensure body takes full height */
+}
+
+html, #root {
+  height: 100%; /* Ensure html and root elements take full height */
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  background-color: black; /* Set background to black */
+  color: white;
+ 
+}
+
+.entry-summary {
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  margin: 5px; /* Adjust margin between entries */
+}
+
+.entry-very-good {
+  background-color: rgba(0, 128, 0, 0.8);
+  color: white;
+}
+
+.entry-good {
+  background-color: rgba(108, 169, 28, 0.8);
+  color: white;
+}
+
+.entry-meh {
+  background-color: rgba(219, 219, 27, 0.745);
+  color: white;
+}
+
+.entry-bad {
+  background-color: rgba(255, 166, 0, 0.8);
+  color: white;
+}
+
+.entry-awful {
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+}
+
+.pagination {
+  margin-top: -10px;
+  color: rgb(186, 88, 88);
+}
+
+.month-select {
+  color: white;
+  border: 2px solid white;
+  margin-bottom: 0px;
+  border-radius: 10px;
+  background-color :#0000003e;
+}
+
+.navbar-container {
+  width: 100%;
+  background-color: #0b0b0b; /* Dark green */
+  padding: 10px 0;
+  text-align: center;
+}
+
+.navbar button {
+  background-color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+.navbar button:hover {
+  background-color: #000000; /* Slightly darker green */
+  color: white;
+}
+
+.content {
+  padding-top: 3px; /* Space for the navbar */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+
+  box-sizing: border-box;
+}

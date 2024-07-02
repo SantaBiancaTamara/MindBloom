@@ -9,6 +9,7 @@ function Login() {
     password: '',
   });
   const [error, setError] = useState(''); // State to hold error message
+  const [showRegister, setShowRegister] = useState(false); // State to show/hide Register button
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -29,11 +30,12 @@ function Login() {
       navigate('/entries');
       // Redirect to homepage or perform other actions after login
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setError('Incorrect email or password, please try again');
-      } else if (error.response) {
+      if (error.response && error.response.status === 404) {
+        setError('User not found. Please register!');
+        setShowRegister(true); // Show the Register button
+      } else if (error.response && error.response.status === 400) {
         console.error('Login Failed:', error.response.data);
-        setError('Login failed, please try again');
+        setError('Incorrect password. Please try again!');
       } else if (error.request) {
         console.error('Login Failed: No response from the server', error.request);
         setError('No response from the server, please try again later');
@@ -42,6 +44,10 @@ function Login() {
         setError('An error occurred, please try again');
       }
     }
+  };
+
+  const handleRegisterRedirect = () => {
+    navigate('/register');
   };
 
   return (
@@ -78,21 +84,13 @@ function Login() {
             />
           </div>
           {error && <div className="error-message">{error}</div>} {/* Display error message */}
-          <div className="form-check">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              id="rememberMe"
-            />
-            <label className="form-check-label" htmlFor="rememberMe">
-              Remember me
-            </label>
-          </div>
           <button type="submit" className="btn btn-primary mt-2">Login</button>
+          {showRegister && (
+            <button onClick={handleRegisterRedirect} className="btn btn-secondary mt-2">
+              Register
+            </button>
+          )}
         </form>
-        <p className="mt-3">
-          Forgot password? <a href="#">Click here</a>
-        </p>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
+// src/components/Entries.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import NavBar from './NavBar';
 import Pagination from '@mui/material/Pagination';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import dayjs from 'dayjs';
+import NavBar from './NavBar'; // Import NavBar component
+import '../styles/UserEntries.css'; // Import the CSS file
 
 function Entries() {
     const [entries, setEntries] = useState([]);
@@ -61,7 +63,7 @@ function Entries() {
         setPage(value);
     };
 
-    const handleMonthChange = (event) => {
+    const handleMonthChange = (event, value) => {
         setMonth(event.target.value);
         setPage(1); // Reset to first page whenever month is changed
     };
@@ -93,15 +95,36 @@ function Entries() {
         }
     };
 
+    const getMoodClass = (mood) => {
+        switch (mood.toLowerCase()) {
+            case 'very good':
+                return 'entry-very-good';
+            case 'good':
+                return 'entry-good';
+            case 'meh':
+                return 'entry-meh';
+            case 'bad':
+                return 'entry-bad';
+            case 'awful':
+                return 'entry-awful';
+            default:
+                return 'entry-summary';
+        }
+    };
+
     return (
         <NavBar>
-            <Box display="flex" flexDirection="column" alignItems="center" mt={5} width="100%">
+            <Box display="flex" flexDirection="column" alignItems="center" className="content">
                 <Typography variant="h4" gutterBottom>
-                    Your Entries
+                    Your Entries for month:
                 </Typography>
                 {error && <Typography color="error">{error}</Typography>}
                 <Box display="flex" justifyContent="center" alignItems="center" mb={3}>
-                    <Select value={month} onChange={handleMonthChange}>
+                    <Select
+                        value={month}
+                        onChange={handleMonthChange}
+                        className="month-select"
+                    >
                         {Array.from({ length: 12 }, (_, i) => (
                             <MenuItem key={i + 1} value={i + 1}>
                                 {dayjs().month(i).format('MMMM')}
@@ -109,11 +132,11 @@ function Entries() {
                         ))}
                     </Select>
                 </Box>
-                <Grid container spacing={2} justifyContent="center">
+                <Grid container spacing={1} justifyContent="center">
                     {entries.map(entry => (
                         <Grid item xs={12} sm={8} md={6} lg={4} key={entry._id}>
                             <Box
-                                className="entry-summary"
+                                className={getMoodClass(entry.moodId.name)}
                                 p={2}
                                 border={1}
                                 borderRadius={5}
@@ -147,8 +170,13 @@ function Entries() {
                         </Grid>
                     ))}
                 </Grid>
-                <Box mt={4}>
-                    <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
+                <Box mt={4} className="pagination">
+                    <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handlePageChange}
+                        sx={{ '& .Mui-selected': { backgroundColor: '#006400', color: 'white' }, '& .MuiPaginationItem-root': { border: '1px solid white' } }}
+                    />
                 </Box>
             </Box>
         </NavBar>

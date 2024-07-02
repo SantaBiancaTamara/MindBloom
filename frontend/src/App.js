@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import Register from './components/Register';
 import Login from './components/Login';
-import Home from './components/IncompleteMoodEntry';
+import MoodEntry from './components/IncompleteMoodEntry';
 import Activities from './components/CompleteActivityEntry';
 import Entries from './components/UserEntries';
 import EntriesForDay from './components/EntriesForDay';
@@ -13,15 +13,17 @@ import JournalPage from './components/JournalPage';
 import FullCalendarPage from './components/FullCalendarPage'; // Ensure the path is correct
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Statistics from './components/Statistics';
+import StartPage from './components/StartPage';
 
 function App() {
   return (
     <div>
       <BrowserRouter>
         <Routes>
+          <Route path='/' element={<StartPage />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/newentry' element={<Home />} />
+          <Route path='/newentry' element={<MoodEntry />} />
           <Route path='/activities' element={<Activities />} />
           <Route path='/entries' element={<Entries />} />
           <Route path='/calendar' element={<FullCalendarPage />} />

@@ -1,8 +1,11 @@
+// src/components/MoodEntry.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../styles/MoodEntry.css';
+import NavBar from './NavBar'; // Import NavBar component
 
-function Home() {
+function MoodEntry() {
   const [moods, setMoods] = useState([]);
   const [error, setError] = useState(''); // State to handle any error
   const [selectedMood, setSelectedMood] = useState('');
@@ -18,8 +21,6 @@ function Home() {
         return;
       }
       
-      console.log(`Bearer ${token}`); // Check the format of the token being sent
-
       try {
         const response = await axios.get('http://localhost:8080/getMoods', {
           headers: {
@@ -27,7 +28,23 @@ function Home() {
           }
         });
         // Assuming the response contains an array of moods
-        setMoods(response.data);
+        const moodsWithColors = response.data.map(mood => {
+          switch (mood.name.toLowerCase()) {
+            case 'very good':
+              return { ...mood, color: 'green', hoverColor: '#00b300' };
+            case 'good':
+              return { ...mood, color: 'lightgreen', hoverColor: '#99cc00' };
+            case 'meh':
+              return { ...mood, color: 'yellow', hoverColor: '#ffcc00' };
+            case 'bad':
+              return { ...mood, color: 'orange', hoverColor: '#ff6600' };
+            case 'awful':
+              return { ...mood, color: 'red', hoverColor: '#ff0000' };
+            default:
+              return { ...mood, color: '#333', hoverColor: '#555' }; // Default color
+          }
+        });
+        setMoods(moodsWithColors);
       } catch (err) {
         // Handle errors: No response received, server error responses, and others
         const errorMessage = err.response
@@ -46,19 +63,13 @@ function Home() {
 
   const handleSelectMood = (moodId) => {
     setSelectedMood(moodId);
-   
-
   };
 
   const saveInitialMood = async () => {
-    console.log(('Continue button clicked'));
-
     if (!selectedMood) {
-      console.log('No mood selected');
       setError('Please select a mood before continuing.');
       return;
     }
- 
 
     try {
       const response = await axios.post('http://localhost:8080/insertIncompleteEntry', {
@@ -68,7 +79,6 @@ function Home() {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
-      console.log('Mood saved, response: ',response);
 
       const entryId = response.data._id;
       localStorage.setItem('entryId', entryId);
@@ -79,33 +89,32 @@ function Home() {
     }
   };
   
-
   return (
-    <div className="mood-tracker">
-      <h2>How are you feeling today?</h2>
-      {error && <p className="text-danger">{error}</p>}
-      <div className="mood-options">
-        {moods.map((mood) => (
-          <div key={mood._id} className="mood-option">
-            <input
-              type="radio" // Changed from checkbox to radio for single selection
-              id={mood._id}
-              name="mood"
-              value={mood._id}
-              checked={selectedMood === mood._id}
-              onChange={() => handleSelectMood(mood._id)}
-            />
-            <label htmlFor={mood._id}>
-              <span role="img" aria-label={mood.name}>{mood.emoji}</span>
-              {mood.name}
-            </label>
+    <NavBar>
+      <div className="container">
+        <div className="mood-tracker">
+          <h2>How are you feeling today?</h2>
+          {error && <p className="text-danger">{error}</p>}
+          <div className="mood-options">
+            {moods.map((mood) => (
+              <button 
+                key={mood._id} 
+                className={`mood-button ${selectedMood === mood._id ? 'selected' : ''}`} 
+                style={{ 
+                  backgroundColor: selectedMood === mood._id ? mood.color : '#333',
+                  borderColor: mood.color
+                }}
+                onClick={() => handleSelectMood(mood._id)}
+              >
+                {mood.name}
+              </button>
+            ))}
           </div>
-        ))}
+          <button onClick={saveInitialMood} className="continue-button">Continue</button>
+        </div>
       </div>
-      <button onClick={saveInitialMood}>Continue</button> {/* Attach the saveInitialMood function */}
-    </div>
+    </NavBar>
   );
 }
 
-
-export default Home;
+export default MoodEntry;

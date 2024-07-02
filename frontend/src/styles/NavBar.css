@@ -4,14 +4,14 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: #006400; /* Dark green */
-    padding: 10px;
+    background-color: #06060652; /* Dark green */
+    padding: 1px;
   }
   
   .navbar button {
     background-color: #fff;
-    color: #006400; /* Dark green */
-    border: 2px solid #006400;
+    color: #090909; /* Dark green */
+    border: 1px solid #006400;
     border-radius: 4px;
     padding: 10px 20px;
     cursor: pointer;

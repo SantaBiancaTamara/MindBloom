@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import NavBar from './NavBar';
+import '../styles/Activities.css';
 
 function Activities() {
   const [categories, setCategories] = useState([]);
   const [selectedActivities, setSelectedActivities] = useState(new Set());
   const [error, setError] = useState('');
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [newActivity, setNewActivity] = useState({ name: '', category: '' });
   const navigate = useNavigate();
 
   const fetchCategoriesWithActivities = async () => {
@@ -19,7 +23,6 @@ function Activities() {
       const response = await axios.get('http://localhost:8080/getAllActivitiesForUser', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log("Fetched Categories with Activities:", response.data); // Debugging log
       setCategories(response.data);
     } catch (error) {
       setError(error.response?.data.message || 'Failed to fetch activities.');
@@ -63,67 +66,77 @@ function Activities() {
     }
   };
 
-  const handleAddActivity = async (categoryName) => {
-    const newActivity = {
-      name: prompt("Enter the name for the new activity:"),
-      description: prompt("Enter the description for the new activity:"),
-      moodImpact: prompt("Enter the mood impact (positive, neutral, negative):"),
-      duration: prompt("Enter the duration:"),
-      frequency: prompt("Enter the frequency:")
-    };
-    if (!newActivity.name || !newActivity.moodImpact) return;
-  
+  const handleAddActivity = async () => {
     const token = localStorage.getItem('token');
+    if (!newActivity.name || !newActivity.category) return;
+  
     try {
       await axios.post('http://localhost:8080/addUserActivity', {
-        categoryName,
         name: newActivity.name,
-        description: newActivity.description,
-        moodImpact: newActivity.moodImpact,
-        additionalAttributes: {
-          duration: newActivity.duration,
-          frequency: newActivity.frequency
-        }
+        category: newActivity.category
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchCategoriesWithActivities(); // Refresh categories to show the new activity
+      setIsFormVisible(false); // Hide the form after adding the activity
     } catch (error) {
       setError("Failed to add activity.");
     }
   };
 
+  const handleInputChange = (e) => {
+    setNewActivity({ ...newActivity, [e.target.name]: e.target.value });
+  };
+
   return (
-    <div className="activity-tracker">
-      <h2>What did you do?</h2>
-      {error && <p className="text-danger">{error}</p>}
-      <div className="categories">
-        {categories.map((category) => (
-          <div key={category._id} className="category">
-            <h3>{category.name}</h3>
-            <button onClick={() => handleAddActivity(category.name)}>+ Add Activity</button>
-            <div className="activities">
-              {category.activities.map((activity) => (
-                <div key={activity._id} className="activity">
-                  <input
-                    type="checkbox"
-                    id={`activity-${activity._id}`}
-                    name="activity"
-                    value={activity._id}
-                    checked={selectedActivities.has(activity._id)}
-                    onChange={() => handleActivitySelection(activity._id)}
-                  />
-                  <label htmlFor={`activity-${activity._id}`}>
-                    {activity.name}
-                  </label>
-                </div>
-              ))}
+    <NavBar>
+      <div className="activity-tracker">
+        <h2>What did you do?</h2>
+        {error && <p className="text-danger">{error}</p>}
+        <div className="categories">
+          {categories.map((category) => (
+            <div key={category._id} className="category">
+              <h3>{category.name}</h3>
+              <button onClick={() => { setIsFormVisible(true); setNewActivity({ ...newActivity, category: category._id }); }}>+ Add Activity</button>
+              <div className="activities">
+                {category.activities.map((activity) => (
+                  <div key={activity._id} className="activity">
+                    <input
+                      type="checkbox"
+                      id={`activity-${activity._id}`}
+                      name="activity"
+                      value={activity._id}
+                      checked={selectedActivities.has(activity._id)}
+                      onChange={() => handleActivitySelection(activity._id)}
+                    />
+                    <label htmlFor={`activity-${activity._id}`}>
+                      {activity.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <button className="save-button" onClick={completeEntry}>Save</button>
+        {isFormVisible && (
+          <div className="overlay">
+            <div className="form-container">
+              <span className="close-button" onClick={() => setIsFormVisible(false)}>X</span>
+              <h3>Add New Activity</h3>
+              <input
+                type="text"
+                name="name"
+                value={newActivity.name}
+                onChange={handleInputChange}
+                placeholder="Activity Name"
+              />
+              <button className="submit-button" onClick={handleAddActivity}>Submit</button>
             </div>
           </div>
-        ))}
+        )}
       </div>
-      <button className="save-button" onClick={completeEntry}>Save</button>
-    </div>
+    </NavBar>
   );
 }
 

@@ -1,93 +1,107 @@
-/* Login.css */
-
+/* src/styles/Login.css */
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f7f7f7;
-  }
-  
-  .login-container {
-    display: flex;
-    height: 100vh;
-  }
-  
-  .login-left {
-    flex: 1;
-    background: linear-gradient(to bottom right, #006400, #000000); /* Dark green to black gradient */
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .app-title {
-    font-size: 3em;
-    margin: 0;
-  }
-  
-  .app-subtitle {
-    font-size: 1.2em;
-    margin-top: 10px;
-    text-align: center;
-  }
-  
-  .login-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background: white;
-    color: #006400; /* Dark green */
-  }
-  
-  h2 {
-    margin-bottom: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-    width: 100%;
-  }
-  
-  .form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .form-check {
-    margin-bottom: 15px;
-  }
-  
-  .btn-primary {
-    background: #006400; /* Dark green */
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .btn-primary:hover {
-    background: #003300; /* Darker green */
-  }
-  
-  a {
-    color: #006400; /* Dark green */
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  .error-message {
-    color: red;
-    margin-bottom: 15px;
-  }
-  
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f7f7f7;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+}
+
+.login-left {
+  flex: 1;
+  background: linear-gradient(to bottom right, #006400, #000000); /* Dark green to black gradient */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.app-title {
+  font-size: 3em;
+  margin: 0;
+}
+
+.app-subtitle {
+  font-size: 1.2em;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.login-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: white;
+  color: #006400; /* Dark green */
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-check {
+  margin-bottom: 15px;
+}
+
+.btn-primary {
+  background: #006400; /* Dark green */
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 20px 0; /* Add margin to the top and bottom */
+}
+
+.btn-primary:hover {
+  background: #003300; /* Darker green */
+}
+
+.btn-secondary {
+  background: #006400; /* Dark green */
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 20px 0; /* Add margin to the top */
+  margin-left: 20px;
+}
+
+.btn-secondary:hover {
+  background: #003300; /* Darker grey */
+}
+
+a {
+  color: #006400; /* Dark green */
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 15px;
+}

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const journalSchema = new mongoose.Schema({
   content: {
-    type: String,
+    type: Text,
     required: true,
   },
   userId: {

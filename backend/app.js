@@ -66,7 +66,7 @@ app.use((error, req, res, next) => {
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(async () => {
     console.log('Connected to MongoDB');
-    //Clear the categories and activities collections
+  //   //Clear the categories and activities collections
   //  await Category.deleteMany({});
   //  console.log('All categories have been deleted.');
   //  await Activity.deleteMany({});

@@ -10,19 +10,6 @@ const activitySchema = new mongoose.Schema({
         ref: 'Category',
         required: true
     },
-    description: {
-        type: String,
-        required: false
-    },
-    moodImpact: {
-        type: String,
-        enum: ['positive', 'neutral', 'negative'],
-        required: false
-    },
-    additionalAttributes: {
-        duration: { type: String, default: '', required: false },
-        frequency: { type: String, default: '', required: false }
-    },
     userId: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

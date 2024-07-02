@@ -1,3 +1,4 @@
+// src/components/Register.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ function Register() {
     nickname: '',
     email: '',
     password: '',
+    confirmPassword: '', // Add confirmPassword to the state
   });
   const [error, setError] = useState(''); // State to hold error message
 
@@ -23,6 +25,15 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match, please try again');
+      setFormData({
+        ...formData,
+        password: '',
+        confirmPassword: '',
+      });
+      return;
+    }
     try {
       // Adjust the URL to match your server's address and port
       const response = await axios.post('http://localhost:8080/register', formData);
@@ -100,6 +111,18 @@ function Register() {
               id="password"
               name="password"
               value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              className="form-control"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
               onChange={handleChange}
               required
             />

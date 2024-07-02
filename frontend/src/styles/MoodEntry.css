@@ -1,0 +1,92 @@
+/* src/styles/MoodEntry.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevent scrolling */
+    background-color: black;
+}
+
+.container {
+
+
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    text-align: center;
+    background-color: rgb(98, 24, 24);
+    color: white;
+}
+
+.mood-tracker {
+    margin-top: 70px;
+    margin-left: 420px;
+    margin-right: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mood-options {
+    display: inline-flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 60px;
+}
+
+.mood-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #333;
+    color: white;
+    padding: 15px 30px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s, transform 0.3s, border-color 0.3s;
+}
+
+.mood-button.very-good:hover, .mood-button.very-good.selected {
+    background-color: green;
+    border-color: green;
+}
+
+.mood-button.good:hover, .mood-button.good.selected {
+    background-color: lightgreen;
+    border-color: lightgreen;
+}
+
+.mood-button.meh:hover, .mood-button.meh.selected {
+    background-color: yellow;
+    border-color: yellow;
+}
+
+.mood-button.bad:hover, .mood-button.bad.selected {
+    background-color: orange;
+    border-color: orange;
+}
+
+.mood-button.awful:hover, .mood-button.awful.selected {
+    background-color: red;
+    border-color: red;
+}
+
+.continue-button {
+    margin-top: 50px;
+    padding: 10px 20px;
+    background-color: #232423;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.continue-button:hover {
+    background-color: #004d00; /* Darker green */
+}
