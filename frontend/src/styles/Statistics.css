@@ -1,0 +1,27 @@
+.statistics-page {
+    padding: 20px;
+  }
+  
+  .chart-container {
+    margin-bottom: 40px;
+  }
+  
+  .table-container {
+    margin-top: 40px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  

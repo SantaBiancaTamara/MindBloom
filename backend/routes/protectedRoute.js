@@ -1,6 +1,6 @@
 // Adjusted protected route definition
 import express from 'express';
-const router = express.Router();
+
 import verifyToken from '../middleware/authMiddleware.js';
 import { getAllCategories, getAllActivities, getMoods, getCategoryWithActivities, getOneCategoryWithActivities, addUserActivity, getAllUserActivity, getAllActivitiesForUser, deleteUserActivity } from '../handlers/categoryActivityHandler.js'
 import { completeUserEntry, getAllUserEntries, insertUserEntry, getUserEntriesByDay, getAllEntries } from '../handlers/entryHandler.js';
@@ -8,8 +8,9 @@ import { insertJournal,getAllJournals, getJournal, getJournalById, getJournalsBy
 import {fetchQuotes} from '../handlers/quotes.js'
 import {text_classif} from "../handlers/text_classif_handler.js"
 import { insertOrUpdateNote , getNote, getNoteById} from '../handlers/noteHandler.js';
-import { getMoodCount, getMoodFluctuationsOverMonth, getMoodFluctuationsOverWeek, getTopActivities } from '../handlers/statisticsHandler.js';
+import { getMoodCount, getActivityCount } from '../handlers/statisticsHandler.js';
 
+const router = express.Router();
 
 //activities and categoryes
 router.get('/getCategories', verifyToken, getAllCategories);
@@ -49,10 +50,8 @@ router.get("/fetchQuotes", verifyToken, fetchQuotes)
 router.post("/text_classif", verifyToken, text_classif);
 
 //statistics
-router.get("/getMoodFluctuationsOverWeek", verifyToken, getMoodFluctuationsOverWeek);
-router.get("/getMoodFluctuationsOverMonth", verifyToken, getMoodFluctuationsOverMonth);
 router.get("/getMoodCount", verifyToken, getMoodCount);
-router.get("/getTopActivities", verifyToken, getTopActivities);
+router.get("/getActivityCount", verifyToken, getActivityCount);
 
 
 

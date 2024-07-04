@@ -5,6 +5,25 @@ import '../styles/NavBar.css'; // Import the CSS file
 function NavBar({ children }) {
   const navigate = useNavigate();
 
+  const handleLogout = async () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      await fetch('http://localhost:8080/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      // Remove the token from localStorage
+      localStorage.removeItem('token');
+      console.log(localStorage.getItem('token'));
+
+      // Redirect to the login page
+      navigate('/login');
+    }
+  };
+
   return (
     <div>
       <nav className="navbar">
@@ -13,6 +32,7 @@ function NavBar({ children }) {
         <button onClick={() => navigate('/statistics')}>Statistics</button>
         <button onClick={() => navigate('/calendar')}>Calendar</button>
         <button onClick={() => navigate('/quotes')}>Quotes</button>
+        <button onClick={handleLogout}>Logout</button> {/* Logout button */}
       </nav>
       <div className="content">
         {children}

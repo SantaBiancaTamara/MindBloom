@@ -1,5 +1,5 @@
 import express from 'express'
-import connectDB from './database/connect.js'
+
 import cors from 'cors'
 import UserModel from './models/User.js'
 import 'dotenv/config'

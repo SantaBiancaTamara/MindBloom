@@ -1,7 +1,8 @@
-import UserModel from '../models/User.js'
-import { hashPassword, comparePassword } from '../utils/passwordUtils.js'
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
+import UserModel from '../models/User.js';
+import { hashPassword, comparePassword } from '../utils/passwordUtils.js';
+import { tokenBlacklist } from '../utils/tokenBlacklist.js';
+import jwt from 'jsonwebtoken';
+
 
 export const registerUser = async (req, res) => {
   try {
@@ -21,6 +22,7 @@ export const registerUser = async (req, res) => {
     user = new UserModel({ fullName, nickname, email, password: hashedPassword });
     await user.save();
     res.status(201).send({ user });
+   
   } catch (error) {
     res.status(500).send('Error in saving');
   }
@@ -34,12 +36,12 @@ export const loginUser = async (req, res) => {
             return res.status(404).send('User not found');
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await comparePassword(password, user.password);
         if(!isMatch) {
             return res.status(400).send('Invalid credentials');
         }
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-       // console.log($({email}))
+
         res.status(200).send(token);
 
     } catch (error) {
@@ -47,6 +49,18 @@ export const loginUser = async (req, res) => {
       }
 }
 
+
+export const logout = async(req, res) => {
+
+  const bearerHeader = req.header('Authorization');
+  const token = bearerHeader.split(' ')[1];
+
+  tokenBlacklist.push(token);
+
+  res.status(200).send('Logged out successfully');
+}
+
+// for verification purposes
 export const getAllUsers = async (req,res) => {
   try {
     const allUsers = await UserModel.find({})
