@@ -13,7 +13,11 @@ const activitySchema = new mongoose.Schema({
     userId: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    isDefault: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const Activity = mongoose.model('Activity', activitySchema);

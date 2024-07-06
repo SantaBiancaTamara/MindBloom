@@ -1,9 +1,7 @@
-// src/components/MoodEntry.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../styles/MoodEntry.css';
-import NavBar from './NavBar'; // Import NavBar component
+import NavBar from './NavBar'; 
 
 function MoodEntry() {
   const [moods, setMoods] = useState([]);
@@ -13,10 +11,10 @@ function MoodEntry() {
 
   useEffect(() => {
     const fetchMoods = async () => {
-      // Retrieve the token from localStorage
+
       const token = localStorage.getItem('token');
       if (!token) {
-        console.error('Authentication token is missing');
+        console.error('no auth token');
         setError('Please log in to continue.');
         return;
       }
@@ -27,26 +25,26 @@ function MoodEntry() {
             Authorization: `Bearer ${token}`
           }
         });
-        // Assuming the response contains an array of moods
-        const moodsWithColors = response.data.map(mood => {
-          switch (mood.name.toLowerCase()) {
-            case 'very good':
-              return { ...mood, color: 'green', hoverColor: '#00b300' };
-            case 'good':
-              return { ...mood, color: 'lightgreen', hoverColor: '#99cc00' };
-            case 'meh':
-              return { ...mood, color: 'yellow', hoverColor: '#ffcc00' };
-            case 'bad':
-              return { ...mood, color: 'orange', hoverColor: '#ff6600' };
-            case 'awful':
-              return { ...mood, color: 'red', hoverColor: '#ff0000' };
+      
+        const moodsColor = response.data.map(mood => {
+          switch (mood.name) {
+            case 'Very Good':
+              return {...mood, color: 'green' };
+            case 'Good':
+              return {...mood, color: 'lightgreen' };
+            case 'Meh':
+              return {...mood, color: 'yellow' };
+            case 'Bad':
+              return {...mood, color: 'orange'};
+            case 'Awful':
+              return {...mood, color: 'red'};
             default:
-              return { ...mood, color: '#333', hoverColor: '#555' }; // Default color
+              return {...mood, color: '#333'};
           }
         });
-        setMoods(moodsWithColors);
+        setMoods(moodsColor);
+
       } catch (err) {
-        // Handle errors: No response received, server error responses, and others
         const errorMessage = err.response
           ? err.response.data.message
           : err.request
@@ -59,7 +57,7 @@ function MoodEntry() {
     };
 
     fetchMoods();
-  }, []); // Dependency array is empty, meaning this effect runs once on component mount
+  }, []); 
 
   const handleSelectMood = (moodId) => {
     setSelectedMood(moodId);
@@ -67,7 +65,7 @@ function MoodEntry() {
 
   const saveInitialMood = async () => {
     if (!selectedMood) {
-      setError('Please select a mood before continuing.');
+      setError('Please select a mood to continue.');
       return;
     }
 
@@ -82,7 +80,7 @@ function MoodEntry() {
 
       const entryId = response.data._id;
       localStorage.setItem('entryId', entryId);
-      navigate('/activities'); // Redirect to activities page after saving
+      navigate('/activities'); 
     } catch (error) {
       console.error('Failed to save mood:', error);
       setError('Failed to save mood. Please try again.');
@@ -90,17 +88,18 @@ function MoodEntry() {
   };
   
   return (
-    <NavBar>
-      <div className="container">
-        <div className="mood-tracker">
+    <div style={styles.body}>
+      <NavBar />
+      <div style={styles.container}>
+        <div style={styles.moodTracker}>
           <h2>How are you feeling today?</h2>
-          {error && <p className="text-danger">{error}</p>}
-          <div className="mood-options">
+          {error && <p style={styles.errorText}>{error}</p>}
+          <div style={styles.moodOptions}>
             {moods.map((mood) => (
               <button 
                 key={mood._id} 
-                className={`mood-button ${selectedMood === mood._id ? 'selected' : ''}`} 
-                style={{ 
+                style={{
+                  ...styles.moodButton, 
                   backgroundColor: selectedMood === mood._id ? mood.color : '#333',
                   borderColor: mood.color
                 }}
@@ -110,11 +109,68 @@ function MoodEntry() {
               </button>
             ))}
           </div>
-          <button onClick={saveInitialMood} className="continue-button">Continue</button>
+          <button onClick={saveInitialMood} style={styles.continueButton}>Continue</button>
         </div>
       </div>
-    </NavBar>
+    </div>
   );
-}
+};
+
+const styles = {
+  body: {
+    margin: 0,
+    padding: 0,
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    backgroundColor: '#f0f2f5',
+    color: 'white'
+  },
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '70vh',
+    textAlign: 'center',
+  },
+  moodTracker: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    color: 'black'
+  },
+  moodOptions: {
+    display: 'inline-flex',
+    justifyContent: 'center',
+    gap: '20px',
+    marginTop: '70px',
+  },
+  moodButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#333',
+    color: 'white',
+    padding: '15px 30px',
+    border: '7px solid transparent',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    fontSize: '1.2em',
+    transition: 'background-color 0.3s, transform 0.3s, border-color 0.3s ',
+  },
+  continueButton: {
+    marginTop: '70px',
+    padding: '10px 20px',
+    backgroundColor: '#232423',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '1.2em',
+  },
+  errorText: {
+    color: 'red',
+  }
+};
 
 export default MoodEntry;

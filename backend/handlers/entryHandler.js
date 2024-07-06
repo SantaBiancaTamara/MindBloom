@@ -2,7 +2,7 @@ import Entry from '../models/Entry.js'
 import mongoose from 'mongoose';
 import Mood from "../models/Mood.js"
 import Activity from "../models/Activity.js"
-import UserActivity from '../models/UserActivity.js';
+//import UserActivity from '../models/UserActivity.js';
 import Note from '../models/Note.js'
 import Journal from '../models/Journal.js'
 
@@ -44,12 +44,12 @@ export const insertUserEntry = async (req, res) => {
         const userId = req.userId;
         
         const updatedEntry = await Entry.findOneAndUpdate(
-            { _id: entryId, userId: userId }, // Ensure this entry belongs to the user
+            { _id: entryId, userId: userId }, 
             {
                 $set: { activityIds: activityIds, isComplete: true },
-                $currentDate: { timestamp: true } // Update timestamp if necessary
+                $currentDate: { timestamp: true } 
             },
-            { new: true } // Return the updated document
+            { new: true } 
         );
     
         if (!updatedEntry) {
@@ -141,7 +141,7 @@ export const getAllEntries = async(req, res) => {
 export const getUserEntriesByDay = async (req, res) => {
   try {
     const { date } = req.params;
-    const userId = req.userId; // Assuming userId is set by your authentication middleware from the token
+    const userId = req.userId;
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized: no user ID provided' });
@@ -161,33 +161,17 @@ export const getUserEntriesByDay = async (req, res) => {
       .populate({
         path: 'activityIds',
         model: Activity,
-        populate: { path: 'category' } // populate category if needed
+        populate: { path: 'category' }
       });
 
-    // Fetch user-defined activities separately
-    const userActivities = await UserActivity.find({ user: userId });
-
     const entriesWithDetails = populatedEntries.map(entry => ({
-      moodName: entry.moodId.name,
-      activities: entry.activityIds.map(activity => {
-        const userActivity = userActivities.find(ua => ua._id.equals(activity._id));
-        if (userActivity) {
-          return {
-            name: userActivity.name,
-            description: userActivity.description,
-            moodImpact: userActivity.moodImpact,
-            additionalAttributes: userActivity.additionalAttributes,
-          };
-        } else {
-          return {
-            name: activity.name,
-            description: activity.description,
-            moodImpact: activity.moodImpact,
-            additionalAttributes: activity.additionalAttributes,
-          };
-        }
-      }),
       timestamp: entry.timestamp,
+      moodName: entry.moodId.name,
+      activities: entry.activityIds.map(activity => ({
+        name: activity.name,
+        category: activity.category ? { name: activity.category.name } : null,
+        isDefault: activity.isDefault
+      })),
       isComplete: entry.isComplete
     }));
 

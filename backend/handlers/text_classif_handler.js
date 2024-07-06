@@ -1,6 +1,4 @@
-import express from 'express';
 import { spawn } from 'child_process';
-import EmotionPrediction from '../models/EmotionPrediction.js'
 
 export const text_classif = async (req, res) => {
     const text = req.body.text;
@@ -17,16 +15,16 @@ export const text_classif = async (req, res) => {
     let errorOutput = '';
 
     process.stdout.on('data', (data) => {
-        console.log('stdout data:', data.toString());  // Log data for debugging
+        console.log('stdout data:', data.toString()); 
         result += data.toString();
     });
 
     process.stderr.on('data', (data) => {
-        console.error('stderr data:', data.toString());  // Log error data for debugging
+        console.error('stderr data:', data.toString()); 
         errorOutput += data.toString();
     });
 
-    process.on('close', async (code) => {  // Mark this function as async
+    process.on('close', async (code) => {  
         if (errorOutput) {
             console.error(`stderr: ${errorOutput}`);
             res.status(500).send('Error processing the request');

@@ -115,7 +115,7 @@ function Entries() {
     return (
         <NavBar>
             <Box display="flex" flexDirection="column" alignItems="center" className="content">
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h4" gutterBottom style={{ color: 'black' }}>
                     Your Entries for month:
                 </Typography>
                 {error && <Typography color="error">{error}</Typography>}
@@ -175,7 +175,7 @@ function Entries() {
                         count={totalPages}
                         page={page}
                         onChange={handlePageChange}
-                        sx={{ '& .Mui-selected': { backgroundColor: '#006400', color: 'white' }, '& .MuiPaginationItem-root': { border: '1px solid white' } }}
+                        sx={{ '& .Mui-selected': { backgroundColor: '#006400', color: 'white' }, '& .MuiPaginationItem-root': { border: '1px solid black' } }}
                     />
                 </Box>
             </Box>

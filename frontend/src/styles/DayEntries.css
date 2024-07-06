@@ -1,0 +1,68 @@
+.entry-tracker {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #000000;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+  }
+  
+  .entry-tracker h2 {
+    text-align: center;
+    color: #fffbfb;
+    margin-bottom: 20px;
+  }
+  
+  .entries-list {
+    list-style-type: none;
+    padding: 0;
+    color:#333
+  }
+  
+  .entry-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #444444;
+  }
+  
+  .entry-item.awful {
+    background-color: #ff4d4d; /* Red */
+  }
+  
+  .entry-item.bad {
+    background-color: #ff9933; /* Orange */
+  }
+  
+  .entry-item.meh {
+    background-color: #ffff66; /* Yellow */
+  }
+  
+  .entry-item.good {
+    background-color: #b3ff66; /* Light Green */
+  }
+  
+  .entry-item.very-good {
+    background-color: #66ff66; /* Green */
+  }
+  
+  .entry-summary p {
+    margin: 5px 0;
+  }
+  
+  .activities-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .activity-item {
+    padding: 5px;
+    background-color: white;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  

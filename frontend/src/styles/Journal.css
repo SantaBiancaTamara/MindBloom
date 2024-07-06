@@ -1,73 +1,115 @@
 body {
-    background-color: #000;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.journal-page {
+  display: flex;
+  justify-content: space-between; /* Ensure space between journal and emotions container */
+  align-items: flex-start;
+  padding: 20px;
+  gap: 80px; /* Add some space between the journal and the emotions container */
+  width: 100%; /* Take full width */
+  height: 100vh; /* Take full height */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+.journal-container {
+  flex: 1; /* Take remaining space */
+  max-width: 600px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: fit-content; 
+  margin-left: 30px;
+}
+
+.journal-container h1 {
+  text-align: center;
+  color: #333;
+}
+
+.journal-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.count-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.word-count, .char-count {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.journal-container button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #176330;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+
+.journal-container button:disabled {
+  background-color: #ccc;
+}
+
+.journal-container button:hover:not(:disabled) {
+  background-color: #2c4e16;
+}
+
+.emotions-container {
+  flex: 1; /* Take remaining space */
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: fit-content; /* Adjust height according to content */
+  margin-right: 30px;
+}
+
+.emotions-container h2 {
+  text-align: center;
+  color: #333;
+}
+
+.emotions-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.emotions-container li {
+  margin: 5px 0;
+  color: #555;
+}
+
+.nav-button {
+  background-color: #b30074 ;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+  background-color:#ff9d00;
   
-  .journal-page {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-  }
-  
-  .journal-container {
-    flex: 2;
-    margin-right: 20px;
-    padding: 20px;
-    border: 1px solid #444;
-    border-radius: 8px;
-    background-color: #222;
-  }
-  
-  form {
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #444;
-    border-radius: 4px;
-    background-color: #333;
-    color: #fff;
-  }
-  
-  button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    background-color: #444;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #555;
-  }
-  
-  .emotions-container {
-    flex: 1;
-    margin-left: 20px;
-    padding: 20px;
-    border: 1px solid #444;
-    border-radius: 8px;
-    background-color: #333;
-  }
-  
-  h1, h2 {
-    text-align: center;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    padding: 5px 0;
-  }
-  
+}
+
+.nav-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

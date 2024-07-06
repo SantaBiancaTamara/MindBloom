@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import NavBar from './NavBar'; // Import the NavBar component
+import '../styles/Note.css'; // Import the CSS file for styling
 
 const Note = () => {
   const [content, setContent] = useState('');
@@ -21,7 +23,7 @@ const Note = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        if (response.data) {
+        if (response.data && response.data.content) {
           setContent(response.data.content);
         } else {
           setContent('');
@@ -60,20 +62,22 @@ const Note = () => {
   };
 
   return (
-    <div>
-      <h1>My Note</h1>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Write something here..."
-          rows="10"
-          cols="50"
-        ></textarea>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <NavBar>
+      <div className="note-page">
+        <h1>My Note</h1>
+        <form onSubmit={handleSubmit}>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Write something here..."
+            rows="10"
+            cols="50"
+          ></textarea>
+          <br />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </NavBar>
   );
 };
 

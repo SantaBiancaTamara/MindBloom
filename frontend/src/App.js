@@ -10,7 +10,7 @@ import Journal from './components/Journal';
 import Quotes from './components/Quotes';
 import Note from './components/Note';
 import JournalPage from './components/JournalPage';
-import FullCalendarPage from './components/FullCalendarPage'; // Ensure the path is correct
+import FullCalendarPage from './components/FullCalendarPage'; 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Statistics from './components/Statistics';
 import StartPage from './components/StartPage';

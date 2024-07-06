@@ -1,4 +1,4 @@
-/* src/styles/MoodEntry.css */
+src/styles/MoodEntry.css
 body, html {
     margin: 0;
     padding: 0;
@@ -10,13 +10,13 @@ body, html {
 
 .container {
 
-
+margin-top: 20 px;
     align-items: center;
     justify-content: center;
     height: 100vh;
     width: 100vw;
     text-align: center;
-    background-color: rgb(98, 24, 24);
+    background-color: rgb(255, 255, 255);
     color: white;
 }
 
@@ -79,7 +79,7 @@ body, html {
 .continue-button {
     margin-top: 50px;
     padding: 10px 20px;
-    background-color: #232423;
+    background-color: #ffffff;
     color: white;
     border: none;
     border-radius: 5px;

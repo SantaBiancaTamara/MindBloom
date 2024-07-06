@@ -1,8 +1,7 @@
-// src/components/Register.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Register.css'; // Import the CSS file
+import '../styles/Register.css';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -10,9 +9,9 @@ function Register() {
     nickname: '',
     email: '',
     password: '',
-    confirmPassword: '', // Add confirmPassword to the state
+    confirmPassword: '', 
   });
-  const [error, setError] = useState(''); // State to hold error message
+  const [error, setError] = useState(''); 
 
   const navigate = useNavigate();
 
@@ -26,7 +25,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match, please try again');
+      setError('Passwords do not match, please try again!');
       setFormData({
         ...formData,
         password: '',
@@ -35,25 +34,21 @@ function Register() {
       return;
     }
     try {
-      // Adjust the URL to match your server's address and port
+
       const response = await axios.post('http://localhost:8080/register', formData);
-      console.log('Registration Success:', response.data);
-      // Optionally redirect the user or clear the form here
+      console.log('user registered successfully', response.data);
       navigate('/login');
+
     } catch (error) {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error('Registration Failed:', error.response.data);
-        setError('Registration failed, please try again');
+        console.error('registration failed', error.response.data);
+        setError('Registration failed, please try again!');
       } else if (error.request) {
-        // The request was made but no response was received
-        console.error('Registration Failed: No response from the server', error.request);
-        setError('No response from the server, please try again later');
+        console.error('no response from the server', error.request);
+        setError('No response from the server, please try again later!');
       } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error:', error.message);
-        setError('An error occurred, please try again');
+        console.error('error:', error.message);
+        setError('An error occurred, please try again!');
       }
     }
   };
@@ -127,7 +122,7 @@ function Register() {
               required
             />
           </div>
-          {error && <div className="error-message">{error}</div>} {/* Display error message */}
+          {error && <div className="error-message">{error}</div>} 
           <button type="submit" className="btn btn-primary mt-2">Submit</button>
         </form>
       </div>

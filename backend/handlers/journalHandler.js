@@ -59,44 +59,6 @@ export const insertJournal = async (req, res) => {
     }
 };
 
-// export const insertOrUpdateJournal = async (req, res) => {
-//     const { content } = req.body;
-//     const userId = req.userId;  // Set by your authentication middleware
-//     const date = new Date(req.body.timestamp);
-//     date.setHours(0,0,0,0);
-
-//     if (!content) {
-//         return res.status(400).send("Content is required");
-//     }
-
-//     try {
-//         const emotions = await detectEmotions(content);
-
-//         const existingJournal = await Journal.findOne({
-//             userId: userId,
-//             timestamp: {
-//                 $gte: date,
-//                 $lt: new Date(date.getTime() + 24 * 60 * 60 * 1000)
-//             }
-//         });
-
-//         if (existingJournal) {
-//             // Set the new content and update the emotions array instead of appending
-//             existingJournal.content = content;  // Replace existing content
-//             existingJournal.emotions = emotions;  // Replace existing emotions
-//             await existingJournal.save();
-//             res.status(200).json(existingJournal);
-//         } else {
-//             // Create a new blank page if one doesn't exist
-//             const newJournal = new Journal({ content, timestamp: date, userId, emotions });
-//             await newJournal.save();
-//             res.status(201).json(newJournal);
-//         }
-//     } catch (error) {
-//         console.error('Error in insertOrUpdateJournal:', error);
-//         res.status(500).send("Error saving the journal");
-//     }
-// };
 
 export const getJournalsByDate = async (req, res) => {
     const userId = req.userId;

@@ -68,22 +68,22 @@ function Activities() {
 
   const handleAddActivity = async () => {
     const token = localStorage.getItem('token');
-    if (!newActivity.name || !newActivity.category) return;
-  
+    if (!newActivity.name || !newActivity.category) 
+      return;
+    console.log('activity-category sent to backend:', { name: newActivity.name, categoryId: newActivity.category }); 
     try {
       await axios.post('http://localhost:8080/addUserActivity', {
         name: newActivity.name,
-        category: newActivity.category
+        categoryId: newActivity.category 
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      fetchCategoriesWithActivities(); // Refresh categories to show the new activity
-      setIsFormVisible(false); // Hide the form after adding the activity
+      fetchCategoriesWithActivities(); 
+      setIsFormVisible(false); 
     } catch (error) {
-      setError("Failed to add activity.");
+      setError("failed to add activity");
     }
   };
-
   const handleInputChange = (e) => {
     setNewActivity({ ...newActivity, [e.target.name]: e.target.value });
   };

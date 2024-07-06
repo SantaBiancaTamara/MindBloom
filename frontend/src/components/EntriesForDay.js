@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import NavBar from './NavBar'; // Adjust the import according to your project structure
+import '../styles/DayEntries.css'; // Import the CSS file for styling
 
 const DayEntries = () => {
   const { date } = useParams(); 
@@ -34,23 +35,42 @@ const DayEntries = () => {
     fetchEntries();
   }, [date]);
 
+  const getMoodClass = (mood) => {
+    switch (mood) {
+      case 'awful':
+        return 'awful';
+      case 'bad':
+        return 'bad';
+      case 'meh':
+        return 'meh';
+      case 'good':
+        return 'good';
+      case 'very good':
+        return 'very-good';
+      default:
+        return '';
+    }
+  };
+
   return (
     <NavBar>
       <div className="entry-tracker">
-        <h2>Your Entries</h2>
+        <h2>Your Entries for this day</h2>
         {error && <p className="text-danger">{error}</p>} {/* Display error if exists */}
         <ul className="entries-list">
           {entries.map((entry, index) => (
-            <li key={index} className="entry-item">
+            <li key={index} className={`entry-item ${getMoodClass(entry.moodName.toLowerCase())}`}>
               <div className="entry-summary">
                 <p><strong>Date:</strong> {new Date(entry.timestamp).toLocaleString()}</p>
                 <p><strong>Mood:</strong> {entry.moodName}</p>
-                <ul>
+                <p><strong>Activity - Category:</strong></p>
+                <ul className="activities-list">
                   {entry.activities.map((activity, idx) => (
-                    <li key={idx}>{activity.name} - {activity.description} ({activity.moodImpact})</li>
+                    <li key={idx} className="activity-item">
+                      {activity.name} - {activity.category?.name}
+                    </li>
                   ))}
                 </ul>
-                {/* <p><strong>Status:</strong> {entry.isComplete ? 'Completed' : 'Incomplete'}</p> */}
               </div>
             </li>
           ))}

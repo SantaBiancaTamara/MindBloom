@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Login.css'; // Import the CSS file
-
+import '../styles/Login.css'; 
 function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [error, setError] = useState(''); // State to hold error message
-  const [showRegister, setShowRegister] = useState(false); // State to show/hide Register button
+  const [error, setError] = useState(''); 
+  const [showRegister, setShowRegister] = useState(false); 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,24 +22,24 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8080/login', formData);
-      console.log('Login Success:', response.data);
+      console.log('login:', response.data);
       localStorage.setItem('token', response.data);
-      console.log('Stored token:', localStorage.getItem('token')); // Check if the token is stored correctly
+      console.log('Stored token:', localStorage.getItem('token')); 
 
       navigate('/entries');
-      // Redirect to homepage or perform other actions after login
+      
     } catch (error) {
       if (error.response && error.response.status === 404) {
         setError('User not found. Please register!');
         setShowRegister(true); // Show the Register button
       } else if (error.response && error.response.status === 400) {
-        console.error('Login Failed:', error.response.data);
+        console.error('login failed:', error.response.data);
         setError('Incorrect password. Please try again!');
       } else if (error.request) {
-        console.error('Login Failed: No response from the server', error.request);
+        console.error('login: server error', error.request);
         setError('No response from the server, please try again later');
       } else {
-        console.error('Error:', error.message);
+        console.error('error:', error.message);
         setError('An error occurred, please try again');
       }
     }
@@ -83,7 +82,7 @@ function Login() {
               required
             />
           </div>
-          {error && <div className="error-message">{error}</div>} {/* Display error message */}
+          {error && <div className="error-message">{error}</div>} 
           <button type="submit" className="btn btn-primary mt-2">Login</button>
           {showRegister && (
             <button onClick={handleRegisterRedirect} className="btn btn-secondary mt-2">

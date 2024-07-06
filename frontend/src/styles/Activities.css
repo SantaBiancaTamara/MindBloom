@@ -1,6 +1,6 @@
 .activity-tracker {
     text-align: center;
-    color: white;
+    color: black;
   }
   
   .categories {
@@ -11,10 +11,11 @@
   }
   
   .category {
-    background-color: #333;
+    background-color: #838080;
     padding: 20px;
     border-radius: 10px;
     width: 200px;
+  
   }
   
   .activities {
