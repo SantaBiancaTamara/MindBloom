@@ -21,7 +21,9 @@ function Activities() {
 
     try {
       const response = await axios.get('http://localhost:8080/getAllActivitiesForUser', {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { 
+          Authorization: `Bearer ${token}`
+        }
       });
       setCategories(response.data);
     } catch (error) {
@@ -57,7 +59,9 @@ function Activities() {
       await axios.patch(`http://localhost:8080/insertCompleteEntry/${entryId}`, {
         activityIds: Array.from(selectedActivities)
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { 
+          Authorization: `Bearer ${token}` 
+        }
       });
 
       navigate('/entries');
@@ -76,7 +80,9 @@ function Activities() {
         name: newActivity.name,
         categoryId: newActivity.category 
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { 
+          Authorization: `Bearer ${token}` 
+        }
       });
       fetchCategoriesWithActivities(); 
       setIsFormVisible(false); 
@@ -84,6 +90,7 @@ function Activities() {
       setError("failed to add activity");
     }
   };
+  
   const handleInputChange = (e) => {
     setNewActivity({ ...newActivity, [e.target.name]: e.target.value });
   };

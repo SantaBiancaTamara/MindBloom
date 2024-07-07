@@ -1,4 +1,3 @@
-// Adjusted protected route definition
 import express from 'express';
 
 import verifyToken from '../middleware/authMiddleware.js';
@@ -6,7 +5,7 @@ import { getAllCategories, getAllActivities, getMoods, getCategoryWithActivities
 import { completeUserEntry, getAllUserEntries, insertUserEntry, getUserEntriesByDay, getAllEntries } from '../handlers/entryHandler.js';
 import { insertJournal,getAllJournals, getJournal, getJournalById, getJournalsByDate } from '../handlers/journalHandler.js';
 import {fetchQuotes} from '../handlers/quotes.js'
-import {text_classif} from "../handlers/text_classif_handler.js"
+import {classifyTextHandler} from "../handlers/classif_handler.js"
 import { insertOrUpdateNote , getNote, getNoteById} from '../handlers/noteHandler.js';
 import { getMoodCount, getActivityCount } from '../handlers/statisticsHandler.js';
 
@@ -39,7 +38,7 @@ router.get('/getNoteById/:id', verifyToken, getNoteById);
 router.get("/fetchQuotes", verifyToken, fetchQuotes)
 
 //text classification
-router.post("/text_classif", verifyToken, text_classif);
+router.post("/text_classif", verifyToken, classifyTextHandler);
 
 //statistics
 router.get("/getMoodCount", verifyToken, getMoodCount);

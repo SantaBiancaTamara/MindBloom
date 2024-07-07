@@ -1,63 +1,38 @@
+// backend/handlers/journalHandler.js
 import mongoose from 'mongoose';
 import Journal from '../models/Journal.js';
 import express from 'express';
-import { spawn } from 'child_process';
+import { text_classif } from '../handlers/classif_handler.js' // Import the Flask handler
 
-const detectEmotions = async (text) => {
-    return new Promise((resolve, reject) => {
-        const process = spawn('python', ['./AI_model/text_classif_model.py', text]);
-        let result = '';
-        let errorOutput = '';
-
-        process.stdout.on('data', (data) => {
-            result += data.toString();
-        });
-
-        process.stderr.on('data', (data) => {
-            errorOutput += data.toString();
-        });
-
-        process.on('close', (code) => {
-            if (errorOutput) {
-                reject('Error processing the request: ' + errorOutput);
-            } else {
-                try {
-                    result = result.replace(/'/g, '"'); // Fix quotes for JSON parsing
-                    const predictions = JSON.parse(result);
-                    const emotions = predictions[0].map(pred => ({
-                        label: pred.label,
-                        score: pred.score
-                    }));
-                    resolve(emotions);
-                } catch (error) {
-                    reject('Error parsing JSON: ' + error);
-                }
-            }
-        });
-    });
-};
 export const insertJournal = async (req, res) => {
     const { content } = req.body;
     const userId = req.userId;  // Set by your authentication middleware
-
+  
     if (!content) {
-        return res.status(400).send("Content is required");
+      return res.status(400).send("Content is required");
     }
-
+  
     const date = new Date();  // Use current date and time
-
+  
     try {
-        const emotions = await detectEmotions(content);
-
-        // Create a new journal entry with the current timestamp
-        const newJournal = new Journal({ content, timestamp: date, userId, emotions });
-        await newJournal.save();
-        res.status(201).json(newJournal);
+      console.log('Classifying text:', content);
+      const emotions = await text_classif(content);
+      console.log('Emotions received:', emotions);
+  
+      // Validate emotions
+      if (!Array.isArray(emotions) || emotions.length === 0 || !emotions.every(e => e.label && e.score)) {
+        throw new Error('Invalid emotions format');
+      }
+  
+      // Create a new journal entry with the current timestamp
+      const newJournal = new Journal({ content, timestamp: date, userId, emotions });
+      await newJournal.save();
+      res.status(201).json(newJournal);
     } catch (error) {
-        console.error('Error in insertJournal:', error);
-        res.status(500).send("Error saving the journal");
+      console.error('Error in insertJournal:', error);
+      res.status(500).send("Error saving the journal");
     }
-};
+  };
 
 
 export const getJournalsByDate = async (req, res) => {
