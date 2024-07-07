@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  db:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URI: mongodb://root:rootpassword@db:27017
+      AI_MODEL_URL: http://ai_model
+
+  ai_model:
+    build:
+      context: ai_model
+      dockerfile: Dockerfile
+    container_name: ai_model
+    ports:
+      - "8001:80"
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "8002:3000"
+
+
+volumes:
+  mongo-data:
