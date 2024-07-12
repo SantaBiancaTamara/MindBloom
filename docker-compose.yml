@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URI: mongodb://admin:admin@mongo:27017/MindBloom?authSource=admin
+      AI_MODEL_URL: http://ai_model
+      JWT_SECRET: 96197750194917321ecec4bec84cd6693b2524e5dec4e075fdc74e716d71ae6e
+    depends_on: 
+      - mongodb
+      - ai_model
+
+  ai_model:
+    build:
+      context: ai_model
+      dockerfile: Dockerfile
+    container_name: ai_model
+    ports:
+      - "8001:80"
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "8002:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
+  hf-cache:

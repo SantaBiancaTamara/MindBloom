@@ -7,8 +7,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import NavBar from './NavBar'; // Ensure this path is correct
-import '../styles/calendar.css'; // Ensure this path is correct
+import NavBar from './NavBar'; 
+import '../styles/calendar.css'; 
 
 function FullCalendarPage() {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -16,7 +16,9 @@ function FullCalendarPage() {
   const navigate = useNavigate();
 
   const handleDateClick = (info) => {
+    console.log('Date clicked:', info.dateStr);
     setSelectedDate(info.dateStr);
+    localStorage.setItem('selectedDate', info.dateStr);
     setOpen(true);
   };
 
@@ -29,6 +31,11 @@ function FullCalendarPage() {
     setOpen(false);
   };
 
+  const handleSeeDayJournals = () => {
+    navigate(`/journalsForToday/${selectedDate}`);
+    setOpen(false);
+  };
+
   const handleJournal = () => {
     navigate('/journal', { state: { selectedDate } });
     setOpen(false);
@@ -38,6 +45,8 @@ function FullCalendarPage() {
     navigate('/note', { state: { selectedDate } });
     setOpen(false);
   };
+
+  
 
   return (
     <NavBar>
@@ -53,8 +62,10 @@ function FullCalendarPage() {
           <DialogTitle>Select an option</DialogTitle>
           <DialogActions>
             <Button onClick={handleSeeDayEntries}>See Day Entries</Button>
+            <Button onClick={handleSeeDayJournals}>See Day Journals</Button>
             <Button onClick={handleJournal}>Journal</Button>
             <Button onClick={handleNote}>Note</Button>
+            
           </DialogActions>
         </Dialog>
       </div>

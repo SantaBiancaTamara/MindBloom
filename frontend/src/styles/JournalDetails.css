@@ -1,0 +1,58 @@
+/* JournalDetails.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f7f7f7;
+  }
+  
+  .journal-page {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .journal-container {
+    padding: 20px;
+  }
+  
+  .journal-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .journal-container h2 {
+    margin-top: 20px;
+    color: #333;
+  }
+  
+  .journal-container p {
+    color: #555;
+  }
+  
+  .journal-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .journal-container ul li {
+    background: #f0f0f0;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  
+  .error {
+    color: red;
+    text-align: center;
+    padding: 10px;
+    background: #ffe0e0;
+    border: 1px solid red;
+    border-radius: 4px;
+  }
+  

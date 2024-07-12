@@ -1,7 +1,5 @@
-// src/components/Entries.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Pagination from '@mui/material/Pagination';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -14,13 +12,11 @@ import '../styles/UserEntries.css'; // Import the CSS file
 
 function Entries() {
     const [entries, setEntries] = useState([]);
-    const [notes, setNotes] = useState([]);
     const [error, setError] = useState('');
     const [expandedEntryId, setExpandedEntryId] = useState(null);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [month, setMonth] = useState(dayjs().month() + 1);
-    const navigate = useNavigate();
 
     const entriesPerPage = 15;
 
@@ -42,11 +38,10 @@ function Entries() {
                     },
                 });
 
-                const { entries, notes, total } = response.data;
+                const { entries, total } = response.data;
 
-                if (entries && notes && total !== undefined) {
+                if (entries && total !== undefined) {
                     setEntries(entries);
-                    setNotes(notes);
                     setTotalPages(Math.ceil(total / entriesPerPage));
                 } else {
                     setError('Unexpected response format from the server.');
@@ -63,36 +58,13 @@ function Entries() {
         setPage(value);
     };
 
-    const handleMonthChange = (event, value) => {
+    const handleMonthChange = (event) => {
         setMonth(event.target.value);
-        setPage(1); // Reset to first page whenever month is changed
+        setPage(1); 
     };
 
-    const handleEntryClick = (id, type) => {
-        if (type === 'note') {
-            navigate(`/note/${id}`);
-        } else if (type === 'journal') {
-            navigate(`/journal/${id}`);
-        }
-    };
-
-    const findNoteForEntry = (timestamp) => {
-        const targetDate = new Date(timestamp).toDateString();
-        return notes.find(note => new Date(note.timestamp).toDateString() === targetDate);
-    };
-
-    const fetchJournalsForEntry = async (timestamp) => {
-        const token = localStorage.getItem('token');
-        const date = new Date(timestamp).toISOString().split('T')[0]; // Format date as YYYY-MM-DD
-        try {
-            const response = await axios.get(`http://localhost:8080/journals/date/${date}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Failed to fetch journals:', error);
-            return [];
-        }
+    const handleEntryClick = (id) => {
+        setExpandedEntryId(expandedEntryId === id ? null : id);
     };
 
     const getMoodClass = (mood) => {
@@ -140,30 +112,14 @@ function Entries() {
                                 p={2}
                                 border={1}
                                 borderRadius={5}
-                                onClick={async () => {
-                                    const journals = await fetchJournalsForEntry(entry.timestamp);
-                                    setEntries(entries.map(e => e._id === entry._id ? { ...e, journals } : e));
-                                    setExpandedEntryId(expandedEntryId === entry._id ? null : entry._id);
-                                }}
+                                onClick={() => handleEntryClick(entry._id)}
                                 sx={{ cursor: 'pointer' }}
                             >
                                 <Typography variant="body1"><strong>Date:</strong> {new Date(entry.timestamp).toLocaleString()}</Typography>
                                 <Typography variant="body1"><strong>Mood:</strong> {entry.moodId.name}</Typography>
-                                {expandedEntryId === entry._id && entry.journals && (
+                                {expandedEntryId === entry._id && (
                                     <Box mt={2}>
                                         <Typography variant="body2"><strong>Activities:</strong> {entry.activityIds.map(activity => activity.name).join(', ')}</Typography>
-                                        {entry.journals.map((journal, index) => (
-                                            <Typography key={journal._id} variant="body2" color="primary" onClick={() => handleEntryClick(journal._id, 'journal')}>
-                                                <strong>Journal {index + 1}:</strong> {new Date(journal.timestamp).toLocaleString()}
-                                            </Typography>
-                                        ))}
-                                        {findNoteForEntry(entry.timestamp) ? (
-                                            <Typography variant="body2" color="primary" onClick={() => handleEntryClick(findNoteForEntry(entry.timestamp)._id, 'note')}>
-                                                <strong>Note:</strong> {new Date(findNoteForEntry(entry.timestamp).timestamp).toLocaleString()}
-                                            </Typography>
-                                        ) : (
-                                            <Typography variant="body2"><strong>Note:</strong> No note entry</Typography>
-                                        )}
                                     </Box>
                                 )}
                             </Box>

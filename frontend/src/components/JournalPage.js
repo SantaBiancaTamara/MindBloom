@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import NavBar from './NavBar';
 import { useParams } from 'react-router-dom';
 import '../styles/Journal.css'; // Assuming you have a CSS file for styling
 
@@ -34,22 +35,26 @@ const JournalPage = () => {
     }
 
     return (
-        <div className="journal-page">
-            <div className="journal-container">
-                <h1>Journal Entry</h1>
-                <p><strong>Date:</strong> {new Date(journal.timestamp).toLocaleString()}</p>
-                <p>{journal.content}</p>
-                <h2>Detected Emotions</h2>
-                <ul>
-                    {journal.emotions.map((emotion, index) => (
-                        <li key={index}>
-                            {emotion.label}: {Math.round(emotion.score * 100)}%
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </div>
-    );
-};
+        <>
+          <NavBar />
+          <div className="journal-page">
+              <div className="journal-container">
+                  <h1>Journal Entry</h1>
+                  <p><strong>Date:</strong> {new Date(journal.timestamp).toLocaleString()}</p>
+                  <h2>Content</h2>
+                  <p>{journal.content}</p>
+                  <h2>Detected Emotions</h2>
+                  <ul>
+                      {journal.emotions.map((emotion, index) => (
+                          <li key={index}>
+                              {emotion.label}: {Math.round(emotion.score * 100)}%
+                          </li>
+                      ))}
+                  </ul>
+              </div>
+          </div>
+        </>
+      );
+    };
 
 export default JournalPage;

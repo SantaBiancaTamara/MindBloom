@@ -2,7 +2,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #000000;
+    background-color: #d8d5d5;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     margin-top: 50px;
@@ -10,7 +10,7 @@
   
   .entry-tracker h2 {
     text-align: center;
-    color: #fffbfb;
+    color: #171717;
     margin-bottom: 20px;
   }
   

@@ -14,6 +14,7 @@ import FullCalendarPage from './components/FullCalendarPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Statistics from './components/Statistics';
 import StartPage from './components/StartPage';
+import JournalForToday from './components/JournalForToday';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path='/calendar' element={<FullCalendarPage />} />
           <Route path='/entries/:date' element={<EntriesForDay />} />
           <Route path='/journal' element={<Journal />} />
+          <Route path='/journalsForToday/:timestamp' element={<JournalForToday />} />
           <Route path='/note' element={<Note />} />
           <Route path='/quotes' element={<Quotes />} />
           <Route path='/journal/:id' element={<JournalPage />} />

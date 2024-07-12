@@ -6,9 +6,8 @@ import '../styles/Note.css'; // Import the CSS file for styling
 const Note = () => {
   const [content, setContent] = useState('');
   const token = localStorage.getItem('token');
-  const selectedDate = localStorage.getItem('date');
+  const selectedDate = localStorage.getItem('selectedDate');
 
-  // Effect to load existing content for the selected date
   useEffect(() => {
     const fetchContent = async () => {
       if (!selectedDate) {
@@ -18,8 +17,10 @@ const Note = () => {
       }
 
       const timestamp = new Date(selectedDate).toISOString();
+      console.log(timestamp);
       try {
-        const response = await axios.get(`http://localhost:8080/getNote/${timestamp}`, {
+        const response = await axios.get('http://localhost:8080/getNote', {
+          params: { timestamp }, 
           headers: { Authorization: `Bearer ${token}` }
         });
 

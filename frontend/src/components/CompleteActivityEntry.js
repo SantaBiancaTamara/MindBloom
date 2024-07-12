@@ -15,6 +15,7 @@ function Activities() {
   const fetchCategoriesWithActivities = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
+      console.error('no auth token');
       setError('Please log in to continue.');
       return;
     }
@@ -27,7 +28,7 @@ function Activities() {
       });
       setCategories(response.data);
     } catch (error) {
-      setError(error.response?.data.message || 'Failed to fetch activities.');
+      setError('Failed to fetch activities.');
     }
   };
 
@@ -50,8 +51,14 @@ function Activities() {
   const completeEntry = async () => {
     const entryId = localStorage.getItem('entryId');
     const token = localStorage.getItem('token');
-    if (!entryId || !token) {
+    if (!entryId) {
       setError('No entry found to update.');
+      return;
+    }
+
+    if (!token) {
+      console.error('no auth token');
+      setError('Please log in to continue.');
       return;
     }
 
@@ -66,31 +73,44 @@ function Activities() {
 
       navigate('/entries');
     } catch (error) {
-      setError(error.response?.data.message || 'Failed to complete entry.');
+      setError('Failed to complete entry.');
     }
   };
 
   const handleAddActivity = async () => {
     const token = localStorage.getItem('token');
-    if (!newActivity.name || !newActivity.category) 
+    if (!token) {
+      console.error('No auth token');
+      setError('Please log in to continue.');
       return;
-    console.log('activity-category sent to backend:', { name: newActivity.name, categoryId: newActivity.category }); 
+    }
+  
+    if (!newActivity.name || !newActivity.category) {
+      setError('Activity name and category are required.');
+      return;
+    }
+    
+    console.log('Activity-category sent to backend:', { name: newActivity.name, categoryId: newActivity.category });
+    
     try {
-      await axios.post('http://localhost:8080/addUserActivity', {
+      const response = await axios.post('http://localhost:8080/addUserActivity', {
         name: newActivity.name,
-        categoryId: newActivity.category 
+        categoryId: newActivity.category
       }, {
         headers: { 
           Authorization: `Bearer ${token}` 
         }
       });
+  
+      console.log('Response from backend:', response.data); 
       fetchCategoriesWithActivities(); 
       setIsFormVisible(false); 
     } catch (error) {
-      setError("failed to add activity");
+      console.error('Failed to add activity:', error);
+      setError('Failed to add activity.');
     }
   };
-  
+
   const handleInputChange = (e) => {
     setNewActivity({ ...newActivity, [e.target.name]: e.target.value });
   };

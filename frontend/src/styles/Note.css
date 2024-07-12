@@ -7,16 +7,18 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+
     height: 100vh;
-    background-color: #f0f2f5;
+    width: 100%;
+    background-color: #f8f9fa;
     padding: 20px;
     box-sizing: border-box;
   }
   
   .note-page h1 {
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    margin-top: 40px;
   }
   
   .note-page textarea {
@@ -30,7 +32,7 @@ body {
   
   .note-page button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #267930;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -38,6 +40,6 @@ body {
   }
   
   .note-page button:hover {
-    background-color: #0056b3;
+    background-color: #267930;
   }
   

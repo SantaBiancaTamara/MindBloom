@@ -5,7 +5,7 @@ import NavBar from './NavBar';
 
 function MoodEntry() {
   const [moods, setMoods] = useState([]);
-  const [error, setError] = useState(''); // State to handle any error
+  const [error, setError] = useState('');
   const [selectedMood, setSelectedMood] = useState('');
   const navigate = useNavigate();
 
@@ -44,15 +44,9 @@ function MoodEntry() {
         });
         setMoods(moodsColor);
 
-      } catch (err) {
-        const errorMessage = err.response
-          ? err.response.data.message
-          : err.request
-          ? 'No response received from server'
-          : err.message;
-          
-        console.error("Failed to fetch moods:", errorMessage);
-        setError(errorMessage);
+      } catch (error) {
+        console.error("Failed to fetch moods");
+        setError("Failed to fetch moods");
       }
     };
 
@@ -70,6 +64,7 @@ function MoodEntry() {
     }
 
     try {
+
       const response = await axios.post('http://localhost:8080/insertIncompleteEntry', {
         moodId: selectedMood
       }, {

@@ -1,11 +1,13 @@
 import { registerUser, loginUser, getAllUsers, logout } from '../handlers/userHandler.js';
-import verifyToken from '../middleware/authMiddleware.js';
+import express from 'express';
 
-const setupUserRoutes = (app) => {
-    app.post('/register', registerUser);
-    app.post('/login', loginUser);
-    app.post('/logout', verifyToken, logout);
-    app.get('/getAllUsers', getAllUsers) //for validation
-};
+const router = express.Router();
 
-export default setupUserRoutes;
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+router.post('/logout', logout);
+
+router.get('/getAllUsers', getAllUsers) //for validation
+
+
+export default router;

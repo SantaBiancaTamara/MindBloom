@@ -52,7 +52,7 @@ h2 {
 .form-group {
   margin-bottom: 15px;
   width: 100%;
-  padding: 0 20px; /* Add padding to ensure the fields are not too close to the edge */
+  padding: 0 20px; 
 }
 
 .form-control {

@@ -8,9 +8,11 @@ const Journal = () => {
   const [emotions, setEmotions] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const token = localStorage.getItem('token');
-  const selectedDate = localStorage.getItem('date');
+  const selectedDate = localStorage.getItem('selectedDate');
   const maxWords = 150;
   const maxCharacters = 1600; // Approximate character limit for practical purposes
+
+  console.log(selectedDate);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,7 +70,7 @@ const Journal = () => {
               placeholder="Write something here..."
               rows="10"
               cols="50"
-              disabled={isSubmitted} // Disable textarea after submission
+              disabled={isSubmitted} 
             ></textarea>
             <div className="count-info">
               <div className="word-count">

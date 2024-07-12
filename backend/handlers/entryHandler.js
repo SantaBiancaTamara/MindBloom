@@ -2,9 +2,7 @@ import Entry from '../models/Entry.js'
 import mongoose from 'mongoose';
 import Mood from "../models/Mood.js"
 import Activity from "../models/Activity.js"
-//import UserActivity from '../models/UserActivity.js';
-import Note from '../models/Note.js'
-import Journal from '../models/Journal.js'
+
 
 export const insertUserEntry = async (req, res) => {
   try {
@@ -18,7 +16,7 @@ export const insertUserEntry = async (req, res) => {
 
       const mood = await Mood.findById(moodId);
       if (!mood) {
-          return res.status(404).json({ error: 'Mood not found' });
+          return res.status(404).json({ error:'Mood not found'});
       }
 
       const newEntry = new Entry({
@@ -31,8 +29,8 @@ export const insertUserEntry = async (req, res) => {
       const savedEntry = await newEntry.save();
       res.status(201).json(savedEntry);
   } catch (error) {
-      console.error('Error creating entry:', error);
-      res.status(400).json({ error: 'Error creating entry' });
+      console.error('Error insert entry:',error);
+      res.status(400).json({ error:'Error insert entry'});
   }
 };
 
@@ -53,12 +51,12 @@ export const insertUserEntry = async (req, res) => {
         );
     
         if (!updatedEntry) {
-            return res.status(404).json({ error: 'Entry not found or user mismatch' });
+            return res.status(404).json({error:'Entry not found or user mismatch'});
         }
     
         res.json(updatedEntry);
     } catch (error) {
-        res.status(400).json({ error: 'Error updating entry' });
+        res.status(400).json({ error:'Error update entry'});
     }
 };
 
@@ -67,62 +65,68 @@ export const getAllUserEntries = async (req, res) => {
   try {
     const userId = req.userId;
 
-    if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized: no user id provided' });
-    }
-
-    const { month, page = 1, limit = 15 } = req.query;
+    const { month, page = 1 } = req.query; 
     const monthNumber = parseInt(month, 10);
+    const limit = 15;
 
-    if (isNaN(monthNumber) || monthNumber < 1 || monthNumber > 12) {
-      return res.status(400).json({ error: 'Invalid month parameter' });
-    }
-
-    const startOfMonth = new Date(new Date().getFullYear(), monthNumber - 1, 1);
+    const startOfMonth = new Date(new Date().getFullYear(), monthNumber - 1, 1); //month must be in [0,11] interval
     const endOfMonth = new Date(new Date().getFullYear(), monthNumber, 0);
-    const skip = (page - 1) * limit;
 
-    // Fetch entries
+    const skip = (page - 1) * limit; //how many documtns to skip according to the page
+
     const allUserEntries = await Entry.find({
       userId: userId,
       timestamp: { $gte: startOfMonth, $lt: endOfMonth }
     })
-      .populate('moodId')
-      .populate('activityIds')
+      .populate('moodId', 'name')
+      .populate('activityIds', 'name')
       .skip(skip)
-      .limit(parseInt(limit, 10))
-      .sort({ timestamp: 1 });
+      .limit(limit) // Always use the fixed limit
+      .sort({ timestamp: 1 })
+      .select('timestamp moodId activityIds');
 
+    //for frontend to calculate the nr of pages
     const totalEntries = await Entry.countDocuments({
       userId: userId,
-      timestamp: { $gte: startOfMonth, $lt: endOfMonth }
-    });
-
-    // Fetch notes and journals
-    const allUserNotes = await Note.find({
-      userId: userId,
-      timestamp: { $gte: startOfMonth, $lt: endOfMonth }
-    });
-
-    const allUserJournals = await Journal.find({
-      userId: userId,
-      timestamp: { $gte: startOfMonth, $lt: endOfMonth }
-    });
-
-    const entriesWithJournals = allUserEntries.map(entry => {
-      const entryDate = new Date(entry.timestamp).toDateString();
-      const journalsForEntry = allUserJournals.filter(journal => new Date(journal.timestamp).toDateString() === entryDate);
-      return { ...entry._doc, journals: journalsForEntry };
+      timestamp: { $gte: startOfMonth.toISOString(), $lt: endOfMonth.toISOString() }
     });
 
     res.json({
-      entries: entriesWithJournals,
-      notes: allUserNotes,
-      total: totalEntries
+      entries: allUserEntries,
+      total: totalEntries 
     });
   } catch (error) {
     console.error('Failed to fetch entries: ', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error fetching entries' });
+  }
+};
+
+export const getUserEntriesByDay = async (req, res) => {
+  try {
+    const { date } = req.params;
+    const userId = req.userId;
+
+    const startDate = new Date(date);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 1);
+
+    const dayEntries = await Entry.find({
+      userId: new mongoose.Types.ObjectId(userId),
+      timestamp: { $gte: startDate, $lt: endDate }
+    })
+      .populate('moodId', 'name')
+      .populate({
+        path: 'activityIds',
+        model: Activity,
+        populate: { path: 'category', select: 'name' }
+      })
+      .sort({ timestamp: 1 })
+      .select('timestamp moodId activityIds');
+
+    res.json(dayEntries);
+  } catch (error) {
+    console.error('Failed to fetch entries for the given date:', error);
+    res.status(500).json({ error: 'Internal server error fetching entries' });
   }
 };
 
@@ -133,51 +137,7 @@ export const getAllEntries = async(req, res) => {
     res.json(entries);
 
   } catch (error) {
-    console.error('Error retrieving entries', error);
-      res.status(500).json({ error: 'Internal server error' });
+    console.error('Error get all entries', error);
+      res.status(500).json({ error:'Internal server error get all entries' });
   }
 }
-
-export const getUserEntriesByDay = async (req, res) => {
-  try {
-    const { date } = req.params;
-    const userId = req.userId;
-
-    if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized: no user ID provided' });
-    }
-
-    const startDate = new Date(date);
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 1);
-
-    const populatedEntries = await Entry.find({
-      userId: new mongoose.Types.ObjectId(userId),
-      timestamp: {
-        $gte: startDate.toISOString(),
-        $lt: endDate.toISOString()
-      }
-    }).populate('moodId')
-      .populate({
-        path: 'activityIds',
-        model: Activity,
-        populate: { path: 'category' }
-      });
-
-    const entriesWithDetails = populatedEntries.map(entry => ({
-      timestamp: entry.timestamp,
-      moodName: entry.moodId.name,
-      activities: entry.activityIds.map(activity => ({
-        name: activity.name,
-        category: activity.category ? { name: activity.category.name } : null,
-        isDefault: activity.isDefault
-      })),
-      isComplete: entry.isComplete
-    }));
-
-    res.json(entriesWithDetails);
-  } catch (error) {
-    console.error('Failed to fetch entries for the given date:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import NavBar from './NavBar'; // Adjust the import according to your project structure
-import '../styles/DayEntries.css'; // Import the CSS file for styling
+import NavBar from './NavBar'; 
+import '../styles/DayEntries.css'; 
+import axios from 'axios';
 
 const DayEntries = () => {
   const { date } = useParams(); 
@@ -10,25 +11,23 @@ const DayEntries = () => {
 
   useEffect(() => {
     const fetchEntries = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Authentication token is missing. Please log in to continue.');
+        return;
+      }
+
       try {
-        const response = await fetch(`http://localhost:8080/entries/${date}`, {
-          method: 'GET',
+        const response = await axios.get(`http://localhost:8080/entries/${date}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`, 
-            'Accept': 'application/json'
+            'Authorization': `Bearer ${token}`
           }
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Fetched entries:', data); 
-        setEntries(data);
+        setEntries(response.data);
       } catch (error) {
         console.error('Failed to fetch entries:', error.message);
-        setError(error.message); 
+        setError('Failed to fetch entries.');
       }
     };
 
@@ -36,7 +35,7 @@ const DayEntries = () => {
   }, [date]);
 
   const getMoodClass = (mood) => {
-    switch (mood) {
+    switch (mood?.toLowerCase()) {
       case 'awful':
         return 'awful';
       case 'bad':
@@ -56,18 +55,18 @@ const DayEntries = () => {
     <NavBar>
       <div className="entry-tracker">
         <h2>Your Entries for this day</h2>
-        {error && <p className="text-danger">{error}</p>} {/* Display error if exists */}
+        {error && <p className="text-danger">{error}</p>} {}
         <ul className="entries-list">
           {entries.map((entry, index) => (
-            <li key={index} className={`entry-item ${getMoodClass(entry.moodName.toLowerCase())}`}>
+            <li key={index} className={`entry-item ${getMoodClass(entry.moodId?.name)}`}>
               <div className="entry-summary">
                 <p><strong>Date:</strong> {new Date(entry.timestamp).toLocaleString()}</p>
-                <p><strong>Mood:</strong> {entry.moodName}</p>
+                <p><strong>Mood:</strong> {entry.moodId?.name || 'Unknown'}</p>
                 <p><strong>Activity - Category:</strong></p>
                 <ul className="activities-list">
-                  {entry.activities.map((activity, idx) => (
+                  {entry.activityIds.map((activity, idx) => (
                     <li key={idx} className="activity-item">
-                      {activity.name} - {activity.category?.name}
+                      {activity.name} - {activity.category?.name || 'No category'}
                     </li>
                   ))}
                 </ul>
