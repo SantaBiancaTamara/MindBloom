@@ -1,7 +1,7 @@
 import Note from '../models/Note.js'
 
 export const insertOrUpdateNote = async (req, res) => {
-  const { content, timestamp } = req.body; // Destructure both content and timestamp from req.body
+  const { content, timestamp } = req.body; 
   const userId = req.userId;
 
   console.log(content, timestamp);
@@ -20,7 +20,7 @@ export const insertOrUpdateNote = async (req, res) => {
 };
 
 export const getNote = async (req, res) => {
-  const { timestamp } = req.query; // Use req.query to fetch query parameters
+  const { timestamp } = req.query; 
   const userId = req.userId;
 
   try {
@@ -41,20 +41,5 @@ export const getNote = async (req, res) => {
   }
 };
 
-export const getNoteById = async (req, res) => {
-    const { id } = req.params;
-    const userId = req.userId; // Get user ID from token
 
-    try {
-        const note = await Note.findOne({ _id: id, userId: userId });
-        if (note) {
-            res.status(200).json(note);
-        } else {
-            res.status(404).json({ message: "Note not found" });
-        }
-    } catch (error) {
-        console.error('Error fetching note by ID:', error);
-        res.status(500).send("Error fetching the note");
-    }
-};
 

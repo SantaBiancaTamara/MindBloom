@@ -4,7 +4,7 @@ import { getAllCategories, getAllActivities, getMoods, getCategoryWithActivities
 import { completeUserEntry, getAllUserEntries, insertUserEntry, getUserEntriesByDay, getAllEntries } from '../handlers/entryHandler.js';
 import { insertJournal, getJournalById, getJournalsByDate, deleteJournalById } from '../handlers/journalHandler.js';
 import {fetchQuotes} from '../handlers/quotes.js'
-import { insertOrUpdateNote , getNote, getNoteById} from '../handlers/noteHandler.js';
+import { insertOrUpdateNote , getNote} from '../handlers/noteHandler.js';
 import { getMoodCount, getActivityCount, getMonthlyMoodCount, getMonthlyActivityCount, getWeeklyMoodCount, getWeeklyActivityCount } from '../handlers/statisticsHandler.js';
 
 const router = express.Router();
@@ -30,7 +30,6 @@ router.delete('/deleteJournalById/:id', verifyToken, deleteJournalById);
 //note
 router.post('/insertOrUpdateNote', verifyToken, insertOrUpdateNote)
 router.get('/getNote', verifyToken, getNote);
-router.get('/getNoteById/:id', verifyToken, getNoteById);
 
 //quotes
 router.get("/fetchQuotes", verifyToken, fetchQuotes)

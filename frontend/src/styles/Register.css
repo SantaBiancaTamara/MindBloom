@@ -1,5 +1,3 @@
-/* src/styles/Register.css */
-
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -14,7 +12,7 @@ body {
 
 .register-left {
   flex: 1;
-  background: linear-gradient(to bottom right, #006400, #000000); /* Dark green to black gradient */
+  background: linear-gradient(to bottom right, #006400, #000000); 
   color: white;
   display: flex;
   flex-direction: column;
@@ -25,7 +23,7 @@ body {
 
 .app-title {
   font-size: 3em;
-  margin: 20px 0; /* Add margin to the top and bottom */
+  margin: 20px 0; 
 }
 
 .app-subtitle {
@@ -42,7 +40,7 @@ body {
   align-items: center;
   padding: 20px;
   background: white;
-  color: #006400; /* Dark green */
+  color: #006400;
 }
 
 h2 {
@@ -65,27 +63,27 @@ h2 {
 .error-message {
   color: red;
   margin-bottom: 15px;
-  padding: 0 20px; /* Add padding to ensure the error message is not too close to the edge */
-  height: 1.5em; /* Add fixed height to avoid layout shift */
-  line-height: 1.5em; /* Ensure the text is vertically centered */
+  padding: 0 20px; 
+  height: 1.5em; 
+  line-height: 1.5em; 
 }
 
 .btn-primary {
-  background: #006400; /* Dark green */
+  background: #006400; 
   border: none;
   padding: 10px 20px;
   color: white;
   border-radius: 4px;
   cursor: pointer;
-  margin: 20px 0; /* Add margin to the top and bottom */
+  margin: 20px 0;
 }
 
 .btn-primary:hover {
-  background: #003300; /* Darker green */
+  background: #003300; 
 }
 
 a {
-  color: #006400; /* Dark green */
+  color: #006400; 
 }
 
 a:hover {

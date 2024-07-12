@@ -41,7 +41,7 @@ body {
   align-items: center;
   padding: 20px;
   background: white;
-  color: #006400; /* Dark green */
+  color: #006400; 
 }
 
 h2 {
@@ -65,36 +65,36 @@ h2 {
 }
 
 .btn-primary {
-  background: #006400; /* Dark green */
+  background: #006400; 
   border: none;
   padding: 10px 20px;
   color: white;
   border-radius: 4px;
   cursor: pointer;
-  margin: 20px 0; /* Add margin to the top and bottom */
+  margin: 20px 0;
 }
 
 .btn-primary:hover {
-  background: #003300; /* Darker green */
+  background: #003300; 
 }
 
 .btn-secondary {
-  background: #006400; /* Dark green */
+  background: #006400; 
   border: none;
   padding: 10px 20px;
   color: white;
   border-radius: 4px;
   cursor: pointer;
-  margin: 20px 0; /* Add margin to the top */
+  margin: 20px 0; 
   margin-left: 20px;
 }
 
 .btn-secondary:hover {
-  background: #003300; /* Darker grey */
+  background: #003300; 
 }
 
 a {
-  color: #006400; /* Dark green */
+  color: #006400; 
 }
 
 a:hover {

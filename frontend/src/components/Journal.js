@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import NavBar from './NavBar'; // Import the NavBar component
-import '../styles/Journal.css'; // Import the CSS file
+import NavBar from './NavBar'; 
+import '../styles/Journal.css'; 
 
 const Journal = () => {
   const [content, setContent] = useState('');
@@ -10,7 +10,7 @@ const Journal = () => {
   const token = localStorage.getItem('token');
   const selectedDate = localStorage.getItem('selectedDate');
   const maxWords = 150;
-  const maxCharacters = 1600; // Approximate character limit for practical purposes
+  const maxCharacters = 1600; 
 
   console.log(selectedDate);
 

@@ -29,23 +29,23 @@
   }
   
   .entry-item.awful {
-    background-color: #ff4d4d; /* Red */
+    background-color: #ff4d4d; 
   }
   
   .entry-item.bad {
-    background-color: #ff9933; /* Orange */
+    background-color: #ff9933; 
   }
   
   .entry-item.meh {
-    background-color: #ffff66; /* Yellow */
+    background-color: #ffff66; 
   }
   
   .entry-item.good {
-    background-color: #b3ff66; /* Light Green */
+    background-color: #b3ff66; 
   }
   
   .entry-item.very-good {
-    background-color: #66ff66; /* Green */
+    background-color: #66ff66; 
   }
   
   .entry-summary p {

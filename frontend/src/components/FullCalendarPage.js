@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar'; 
-import '../styles/calendar.css'; 
+import '../styles/Calendar.css'; 
 
 function FullCalendarPage() {
   const [selectedDate, setSelectedDate] = useState(null);

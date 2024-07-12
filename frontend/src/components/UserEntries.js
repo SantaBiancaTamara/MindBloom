@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import dayjs from 'dayjs';
-import NavBar from './NavBar'; // Import NavBar component
-import '../styles/UserEntries.css'; // Import the CSS file
+import NavBar from './NavBar'; 
+import '../styles/UserEntries.css'; 
 
 function Entries() {
     const [entries, setEntries] = useState([]);

@@ -16,7 +16,6 @@ const NoteSchema = new mongoose.Schema({
     }
 })
 
-//NoteSchema.index({userId:1, timestamp:1}, {unique:true})
 
 const Note = mongoose.model('Note', NoteSchema);
 

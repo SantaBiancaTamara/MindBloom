@@ -1,43 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import axios from 'axios';
-import NavBar from './NavBar'; // Ensure this path is correct
+import NavBar from './NavBar';
 import '../styles/Statistics.css';
-
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Statistics = () => {
   const [moodData, setMoodData] = useState([]);
   const [activityData, setActivityData] = useState([]);
-  const [showMonthlyInputs, setShowMonthlyInputs] = useState(false); // To show or hide month/year inputs
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Current month
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Current year
+  const [showMonthlyInputs, setShowMonthlyInputs] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  useEffect(() => {
-    if (showMonthlyInputs) {
-      fetchDataByMonth();
-    } else {
-      fetchOverallData();
-    }
-  }, [showMonthlyInputs, selectedMonth, selectedYear]);
-
-  const fetchOverallData = () => {
-    fetchOverallMoodData();
-    fetchOverallActivityData();
-  };
-
-  const fetchDataByMonth = () => {
-    fetchMoodDataByMonth();
-    fetchActivityDataByMonth();
-  };
-
-  const fetchOverallMoodData = async () => {
+  const fetchOverallMoodData = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:8080/getMoodCount', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
       console.log('Overall Mood data:', response.data);
@@ -45,13 +26,13 @@ const Statistics = () => {
     } catch (error) {
       console.error('Error fetching overall mood data:', error);
     }
-  };
+  }, []);
 
-  const fetchMoodDataByMonth = async () => {
+  const fetchMoodDataByMonth = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:8080/getMonthlyMoodCount', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         },
         params: {
           month: selectedMonth,
@@ -63,13 +44,13 @@ const Statistics = () => {
     } catch (error) {
       console.error('Error fetching monthly mood data:', error);
     }
-  };
+  }, [selectedMonth, selectedYear]);
 
-  const fetchOverallActivityData = async () => {
+  const fetchOverallActivityData = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:8080/getActivityCount', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
       console.log('Overall Activity data:', response.data);
@@ -77,13 +58,13 @@ const Statistics = () => {
     } catch (error) {
       console.error('Error fetching overall activity data:', error);
     }
-  };
+  }, []);
 
-  const fetchActivityDataByMonth = async () => {
+  const fetchActivityDataByMonth = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:8080/getMonthlyActivityCount', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         },
         params: {
           month: selectedMonth,
@@ -95,30 +76,52 @@ const Statistics = () => {
     } catch (error) {
       console.error('Error fetching monthly activity data:', error);
     }
-  };
+  }, [selectedMonth, selectedYear]);
+
+  const fetchOverallData = useCallback(() => {
+    fetchOverallMoodData();
+    fetchOverallActivityData();
+  }, [fetchOverallMoodData, fetchOverallActivityData]);
+
+  const fetchDataByMonth = useCallback(() => {
+    fetchMoodDataByMonth();
+    fetchActivityDataByMonth();
+  }, [fetchMoodDataByMonth, fetchActivityDataByMonth]);
+
+  useEffect(() => {
+    if (showMonthlyInputs) {
+      fetchDataByMonth();
+    } else {
+      fetchOverallData();
+    }
+  }, [showMonthlyInputs, selectedMonth, selectedYear, fetchDataByMonth, fetchOverallData]);
 
   const moodColorMapping = {
-    "Very Good": "green",
-    "Good": "lightgreen",
-    "Meh": "yellow",
-    "Bad": "orange",
-    "Awful": "red"
+    'Very Good': 'green',
+    'Good': 'lightgreen',
+    'Meh': 'yellow',
+    'Bad': 'orange',
+    'Awful': 'red'
   };
 
   const moodChartData = {
     labels: moodData.map(item => item.moodName),
     datasets: [{
       data: moodData.map(item => item.count),
-      backgroundColor: moodData.map(item => moodColorMapping[item.moodName] || '#FF9F40') 
+      backgroundColor: moodData.map(item => moodColorMapping[item.moodName] || '#FF9F40')
     }]
   };
 
   const handleMonthChange = (e) => {
-    setSelectedMonth(Number(e.target.value));
+    const month = parseInt(e.target.value, 10);
+    setSelectedMonth(month);
+    console.log(`Selected month: ${month}`);
   };
 
   const handleYearChange = (e) => {
-    setSelectedYear(Number(e.target.value));
+    const year = parseInt(e.target.value, 10);
+    setSelectedYear(year);
+    console.log(`Selected year: ${year}`);
   };
 
   return (
@@ -168,6 +171,5 @@ const Statistics = () => {
     </NavBar>
   );
 };
-
 
 export default Statistics;

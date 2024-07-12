@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavBar from './NavBar';
 import { useParams } from 'react-router-dom';
-import '../styles/Journal.css'; // Assuming you have a CSS file for styling
+import '../styles/Journal.css'; 
 
 const JournalPage = () => {
     const { id } = useParams();

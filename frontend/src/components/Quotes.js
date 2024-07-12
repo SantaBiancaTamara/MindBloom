@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from './NavBar'; // Ensure this path is correct
-import '../styles/Quotes.css'; // Ensure this path is correct
+import NavBar from './NavBar';
+import '../styles/Quotes.css';
 
 function Quotes() {
   const [quotes, setQuotes] = useState([]);
@@ -9,11 +9,12 @@ function Quotes() {
 
   useEffect(() => {
     const fetchQuotes = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          setError('Please log in to continue.');
-          return;
-        }
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('no auth token');
+        setError('Please log in to continue.');
+        return;
+      }
         try {
           const response = await fetch('http://localhost:8080/fetchQuotes', {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -26,7 +27,7 @@ function Quotes() {
           }
         } catch (error) {
           console.error('Error fetching quotes:', error);
-          setError(error.message); // Set the error message here
+          setError("error fetching the moods"); 
         }
     };
 
@@ -45,7 +46,7 @@ function Quotes() {
     <NavBar>
       <div className="quotes-page">
         <h1>Inspirational Quotes</h1>
-        {error && <p className="error">{error}</p>} {/* Display the error message here */}
+        {error && <p className="error">{error}</p>} 
         {quotes.length > 0 ? (
           <div className="quote-container">
             <button className="nav-button" onClick={handlePreviousQuote} disabled={quotes.length <= 1}>{"<"}</button>
@@ -55,7 +56,7 @@ function Quotes() {
             </div>
             <button className="nav-button" onClick={handleNextQuote} disabled={quotes.length <= 1}>{">"}</button>
           </div>
-        ) : !error && <p>No quotes available.</p>} {/* Show this message only if there's no error */}
+        ) : !error && <p>No quotes available.</p>} 
       </div>
     </NavBar>
   );

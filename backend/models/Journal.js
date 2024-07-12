@@ -20,7 +20,6 @@ const journalSchema = new mongoose.Schema({
   }]
 });
 
-//blankPageSchema.index({ userId: 1, timestamp: 1 }, { unique: true });
 
 const Journal = mongoose.model('Journal', journalSchema);
 

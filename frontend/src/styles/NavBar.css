@@ -1,16 +1,14 @@
-/* NavBar.css */
-
 .navbar {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: #06060652; /* Dark green */
+    background-color: #06060652; 
     padding: 1px;
   }
   
   .navbar button {
     background-color: #fff;
-    color: #090909; /* Dark green */
+    color: #090909; 
     border: 1px solid #006400;
     border-radius: 4px;
     padding: 10px 20px;
@@ -20,7 +18,7 @@
   }
   
   .navbar button:hover {
-    background-color: #003300; /* Darker green */
+    background-color: #003300; 
     color: #fff;
   }
   

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import NavBar from './NavBar'; // Import the NavBar component
-import '../styles/Note.css'; // Import the CSS file for styling
+import NavBar from './NavBar'; 
+import '../styles/Note.css'; 
 
 const Note = () => {
   const [content, setContent] = useState('');
+  const [error, setError] = useState('');
   const token = localStorage.getItem('token');
   const selectedDate = localStorage.getItem('selectedDate');
 
@@ -13,6 +14,7 @@ const Note = () => {
       if (!selectedDate) {
         console.error('No date selected');
         setContent('');
+        setError('No date selected');
         return;
       }
 
@@ -26,12 +28,14 @@ const Note = () => {
 
         if (response.data && response.data.content) {
           setContent(response.data.content);
+          setError('');
         } else {
           setContent('');
         }
       } catch (error) {
         console.error('Failed to fetch content:', error);
         setContent('');
+        setError('Failed to fetch content.');
       }
     };
 
@@ -41,7 +45,7 @@ const Note = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedDate) {
-      alert('No date selected');
+      setError('No date selected');
       return;
     }
 
@@ -55,10 +59,11 @@ const Note = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('Content saved:', response.data);
+      setError('');
       alert('Note saved successfully!');
     } catch (error) {
       console.error('Failed to save note:', error);
-      alert('Failed to save note.');
+      setError('Failed to save note.');
     }
   };
 
@@ -66,6 +71,7 @@ const Note = () => {
     <NavBar>
       <div className="note-page">
         <h1>My Note</h1>
+        {error && <p className="error">{error}</p>}
         <form onSubmit={handleSubmit}>
           <textarea
             value={content}

@@ -1,10 +1,9 @@
-src/styles/MoodEntry.css
 body, html {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Prevent scrolling */
+    overflow: hidden; 
     background-color: black;
 }
 
@@ -88,5 +87,5 @@ margin-top: 20 px;
 }
 
 .continue-button:hover {
-    background-color: #004d00; /* Darker green */
+    background-color: #004d00; 
 }

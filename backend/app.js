@@ -2,7 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import mongoose from 'mongoose'
-import setupUserRoutes from './routes/userRoutes.js'
 import userRoute from './routes/userRoutes.js'
 import protectedRoute from './routes/protectedRoute.js'
 import initializeDefaults from './utils/initializeDefaultsUtils.js'
@@ -31,7 +30,6 @@ app.use((error, req, res, next) => {
     console.error(error.stack);
     res.status(500).send('Something broke!');
 });
-
 
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

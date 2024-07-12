@@ -41,13 +41,13 @@ function Register() {
 
     } catch (error) {
       if (error.response) {
-        console.error('registration failed', error.response.data);
+        console.error('registration failed');
         setError('Registration failed, please try again!');
       } else if (error.request) {
-        console.error('no response from the server', error.request);
+        console.error('no response from the server');
         setError('No response from the server, please try again later!');
       } else {
-        console.error('error:', error.message);
+        console.error('error:');
         setError('An error occurred, please try again!');
       }
     }

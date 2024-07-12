@@ -33,7 +33,7 @@ function Login() {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         setError('User not found. Please register!');
-        setShowRegister(true); // Show the Register button
+        setShowRegister(true); 
       } else if (error.response && error.response.status === 400) {
         console.error('login failed:', error.response.data);
         setError('Incorrect password. Please try again!');
